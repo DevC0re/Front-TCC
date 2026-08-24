@@ -1,8 +1,10 @@
+import { RegisterPage } from "./pages/SignInPage"
+
 function App() {
 
   return (
     <>
-
+    <RegisterPage/>
 
 
     </>
