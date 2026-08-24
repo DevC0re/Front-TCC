@@ -1,58 +1,56 @@
 import { Button } from "../../components/Button";
-import Input from "../../components/Input";
-export function RegisterPage(){
+import { Input } from "../../components/Input";
+import hospital from "../../assets/Hospital.jpg";
+import s from "./SignInPage.module.scss"
 
+interface RegisterFormData {
+  name: string;
+  email: string;
+  password: string;
+  "confirm-password": string;
+}
+interface RegisterFormError {
+  name?: string;
+  email?: string;
+  password?: string;
+  "confirm-password"?: string;
+}
 
-    return(
-        <>
-        <div className="Left-Section">
+export function RegisterPage() {
+  return (
+    <div className={s.registerContainer}>
+      <div className={s.leftSection}>
+        <img src={hospital} alt="" />
+      </div>
 
-        <img src="" alt="" />
+      <div className={s.rightSection}>
+        <h1>Registro</h1>
+        <form>
+          <label htmlFor="name">Nome</label>
+          <Input type="text" id="name" placeholder="Nome completo" />
 
-        <button className="back-button"></button>
-        </div>
+          <label htmlFor="email">E-mail</label>
+          <Input type="email" id="email" placeholder="Digite seu e-mail" />
 
-        <div className="Right-Section">
-            <h1>Registro</h1>    
-            <form>
-                
+          <label htmlFor="password">Senha</label>
+          <Input
+            type="password"
+            id="password"
+            placeholder="********"
+            variant="password"
+          />
 
-                <label htmlFor="name">Nome</label>
-                <Input 
-                type="text"
-                id="name"
-                placeholder="Nome completo"
-                />
+          <label htmlFor="confirm-password">Confirmar senha</label>
+          <Input
+            type="password"
+            id="confirm-password"
+            placeholder="********"
+            variant="password"
+          />
 
-                <label htmlFor="email">E-mail</label>
-                <Input 
-                type="email"
-                id="email"
-                placeholder="Digite seu e-mail"
-                />
-
-
-                <label htmlFor="password">Senha</label>
-                <Input 
-                type="password"
-                id="password"
-                placeholder="********"
-                />
-
-
-               <label htmlFor="confirm-password">Confirmar senha</label>
-                <Input 
-                type="password"
-                id="confirm-password"
-                placeholder="********"
-                />
-
-                <Button type="submit" >
-                Criar nova conta
-                </Button>    
-            </form>
-
-        </div>
-        </>
-    )
+          <Button type="submit">Criar nova conta</Button>
+        </form>
+      </div>
+    </div>
+  );
 }

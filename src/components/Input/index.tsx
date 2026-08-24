@@ -1,6 +1,7 @@
 import type { InputHTMLAttributes } from "react";
 import { useState, } from "react";
 import {Eye, EyeOff} from "lucide-react";
+import s from "./input.module.scss";
 
 interface InputProps extends InputHTMLAttributes <HTMLInputElement> {
 
@@ -9,7 +10,7 @@ interface InputProps extends InputHTMLAttributes <HTMLInputElement> {
 } 
 
 
-export default function Input({ type, id , placeholder, variant= "default", ...rest }: InputProps ){
+export function Input({ type, id , placeholder, variant= "default", ...rest }: InputProps ){
     
     const [isPasswordVisible, setIsPasswordVisible] = useState(false)
     
@@ -22,7 +23,7 @@ export default function Input({ type, id , placeholder, variant= "default", ...r
 
 
     return(
-        <div className="input-wrapper">
+        <div className={s.inputWrapper}>
         <input 
         type = {resolvedType}
         id = {id}

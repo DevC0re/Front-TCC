@@ -1,11 +1,11 @@
 @use "../../style/utils/variables" as *; 
 
-.input-wrapper{
+.inputWrapper{
 
     position: relative;
     width: 100%;
 }
-.toggle-password{
+.togglePassword{
     position: absolute;
     right: 12px;
     top: 50%;
@@ -15,7 +15,13 @@
     cursor: pointer;
     color: $neutral-500;
 }
-.input-wrapper input{
+.inputWrapper input{
     padding-right: 40px;
+    display: flex;
+    padding: 12px 14px;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+    flex: 1 0 0;
 
 }
