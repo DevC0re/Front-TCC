@@ -1,0 +1,15 @@
+@use "../../style/utils/variables" as *;
+
+.button{
+
+    background-color: $teal;
+    display: flex;
+    align-items: flex-start;
+    width: 358px;
+    height: 44px;
+    text-align: center;
+    color: white;
+
+
+
+}
