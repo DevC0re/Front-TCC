@@ -1,4 +1,4 @@
-import "./styles.scss";
+import "./button.modules.scss";
 import { Children } from "react";
 
 interface ButtonProps{

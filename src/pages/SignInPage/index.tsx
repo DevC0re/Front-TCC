@@ -7,13 +7,13 @@ interface RegisterFormData {
   name: string;
   email: string;
   password: string;
-  "confirm-password": string;
+  "confirmPassword": string;
 }
 interface RegisterFormError {
   name?: string;
   email?: string;
   password?: string;
-  "confirm-password"?: string;
+  "confirmPassword"?: string;
 }
 
 export function RegisterPage() {
@@ -34,7 +34,6 @@ export function RegisterPage() {
 
           <label htmlFor="password">Senha</label>
           <Input
-            type="password"
             id="password"
             placeholder="********"
             variant="password"
@@ -42,7 +41,6 @@ export function RegisterPage() {
 
           <label htmlFor="confirm-password">Confirmar senha</label>
           <Input
-            type="password"
             id="confirm-password"
             placeholder="********"
             variant="password"

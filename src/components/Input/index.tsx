@@ -34,7 +34,7 @@ export function Input({ type, id , placeholder, variant= "default", ...rest }: I
         {variant === "password" && (
             <button
                 type="button"
-                className="toggle-password"
+                className={s.togglePassword}
                 onClick={()=> setIsPasswordVisible((prev)=>!prev)}
                 aria-label={isPasswordVisible ? "Ocultar senha" : "Mostrar senha"}>
 
