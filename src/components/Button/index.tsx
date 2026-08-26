@@ -1,5 +1,4 @@
-import "./button.modules.scss";
-import { Children } from "react";
+import s from "./button.module.scss";
 
 interface ButtonProps{
 
@@ -12,7 +11,7 @@ interface ButtonProps{
 
 export function Button({ children, type ="submit" } : ButtonProps){
     return(
-        <button className ="button" type={type}>
+        <button className ={s.button} type={type}>
 
             {children}
             
