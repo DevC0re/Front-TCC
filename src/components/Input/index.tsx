@@ -25,10 +25,12 @@ export function Input({ type, id , placeholder, variant= "default", ...rest }: I
     return(
         <div className={s.inputWrapper}>
         <input 
+        className={s.input}
         type = {resolvedType}
         id = {id}
         placeholder = {placeholder}
         {...rest}
+        
         /> 
         
         {variant === "password" && (
