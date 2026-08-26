@@ -3,6 +3,7 @@
 .registerContainer{
     display: flex;
     min-height: 100vh;
+    background-color: $sky-blue;
     
 }
 .leftSection{
@@ -21,9 +22,47 @@
 
 .rightSection{
     flex: 1;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    gap: 76px;
 }
 
-.rightSection h1{
+.text{
+    color: #000;
+    padding-top: 174px;
+}
+.form{
+    display: flex;
+    gap: 24px;
+    flex-direction: column;
+}
+.field{
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+.terms{
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+.termsNotice {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    text-align: center;
+    margin-top: -48px; // compensa o gap: 76px do .rightSection, aproximando do botão
+    color: $neutral-500;
+    font-size: 14px;
+}
 
-    color: blue;
+.terms a {
+    color: $teal;
+    font-weight: 600;
+}
+
+.terms a:hover {
+    text-decoration: underline;
 }
