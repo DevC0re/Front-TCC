@@ -49,6 +49,15 @@ export function RegisterPage() {
           <Button type="submit">Criar nova conta</Button>
         </form>
 
+        <div className={s.loginTxt}>
+          <p>
+          <div className={s.terms}>
+          <span>Você já tem uma conta? </span>
+          <a href="">Faça o Login</a>
+          </div>
+          </p>
+        </div>
+
         <div className={s.termsNotice}>
           <p>Ao continuar, você concorda com nossos</p>
           <p className={s.terms}>
