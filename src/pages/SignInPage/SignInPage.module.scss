@@ -13,6 +13,17 @@
   flex: 1.4;
 }
 
+.leftSection::after{
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 800px;
+    background: linear-gradient(to bottom, transparent, $sky-blue);
+    pointer-events: none;
+    content: "";
+}
+
 .leftSection img{
     
     object-fit: cover;
