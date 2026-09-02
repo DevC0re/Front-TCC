@@ -5,12 +5,13 @@ import s from "./input.module.scss";
 
 interface InputProps extends InputHTMLAttributes <HTMLInputElement> {
 
-    variant?:"default" |"password";
+    variant?:"default" |"password"
     type?:"email"|"text"|"password"
+    error?: boolean
 } 
 
 
-export function Input({ type, id , placeholder, variant= "default", ...rest }: InputProps ){
+export function Input({ type, id , placeholder, variant= "default",error, ...rest }: InputProps ){
     
     const [isPasswordVisible, setIsPasswordVisible] = useState(false)
     
@@ -25,7 +26,7 @@ export function Input({ type, id , placeholder, variant= "default", ...rest }: I
     return(
         <div className={s.inputWrapper}>
         <input 
-        className={s.input}
+        className={`${s.input} ${error ? s.inputError:""}`}
         type = {resolvedType}
         id = {id}
         placeholder = {placeholder}
