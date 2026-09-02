@@ -2,6 +2,7 @@ import { Button } from "../../components/Button";
 import { Input } from "../../components/Input";
 import hospital from "../../assets/Hospital.jpg";
 import s from "./SignInPage.module.scss";
+import { useState } from "react";
 
 interface RegisterFormData {
   name: string;
@@ -17,6 +18,20 @@ interface RegisterFormError {
 }
 
 export function RegisterPage() {
+
+
+  const [fdata, setFData] = useState<RegisterFormData>({
+    name: '',
+    email: '',
+    password: '',
+    confirmPassword: ''
+  })
+
+  const [eData, setEData] = useState<RegisterFormError>({
+
+    
+  })
+
   return (
     <div className={s.registerContainer}>
       <div className={s.leftSection}>
@@ -28,22 +43,69 @@ export function RegisterPage() {
         <form className={s.form}>
           <div className={s.field}>
             <label htmlFor="name">Nome</label>
-            <Input type="text" id="name" placeholder="Nome completo" />
+            <Input
+              type="text"
+              id="name"
+              placeholder="Nome completo"
+              value={fdata.name}
+              onChange={(event) => {
+                setFData((previous) => ({
+                  ...previous,
+                  name: event.target.value
+                }))
+              }}
+            />
           </div>
           <div className={s.field}>
             <label htmlFor="email">E-mail</label>
-            <Input type="email" id="email" placeholder="Digite seu e-mail" />
+            <Input
+              type="email"
+              id="email"
+              placeholder="Digite seu e-mail"
+              value={fdata.email}
+              onChange={(event) => {
+                setFData((previous) => (
+                  { ...previous, email: event.target.value }
+                )
+                )
+              }
+              }
+            />
+
           </div>
+
           <div className={s.field}>
             <label htmlFor="password">Senha</label>
-            <Input id="password" placeholder="********" variant="password" />
+            <Input
+              id="password"
+              placeholder="********"
+              variant="password"
+              value={fdata.password}
+              onChange={(event) => {
+                setFData((previous) => (
+                  { ...previous, password: event.target.value }
+                )
+                )
+              }
+              }
+            />
           </div>
+
           <div className={s.field}>
             <label htmlFor="confirm-password">Confirmar senha</label>
             <Input
               id="confirm-password"
               placeholder="********"
               variant="password"
+              value={fdata.confirmPassword}
+              onChange={(event)=>{
+                setFData((previous)=> (
+                  {...previous, confirmPassword: event.target.value}
+                )
+                )
+              }
+              }
+
             />
           </div>
           <Button type="submit">Criar nova conta</Button>
@@ -51,10 +113,10 @@ export function RegisterPage() {
 
         <div className={s.loginTxt}>
           <p>
-          <div className={s.terms}>
-          <span>Você já tem uma conta? </span>
-          <a href="">Faça o Login</a>
-          </div>
+            <div className={s.terms}>
+              <span>Você já tem uma conta? </span>
+              <a href="">Faça o Login</a>
+            </div>
           </p>
         </div>
 
