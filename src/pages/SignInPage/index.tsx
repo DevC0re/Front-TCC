@@ -2,7 +2,7 @@ import { Button } from "../../components/Button";
 import { Input } from "../../components/Input";
 import hospital from "../../assets/Hospital.jpg";
 import s from "./SignInPage.module.scss";
-import { useState } from "react";
+import { useState, type FormEvent } from "react";
 
 interface RegisterFormData {
   name: string;
@@ -29,8 +29,65 @@ export function RegisterPage() {
 
   const [eData, setEData] = useState<RegisterFormError>({
 
-    
+
   })
+
+
+  const handleSingIn = (event: FormEvent) => {
+    event.preventDefault();
+
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!fdata.name.trim()) {
+      setEData((previous) => ({
+
+        ...previous, name: "Nome é obrigatorio"
+      }))
+
+
+
+
+    }
+    if (!fdata.email.trim()) {
+      setEData((previous) => ({
+        ...previous, email: "E-mail é obrigatorio"
+      }))
+
+    }
+    if (!fdata.password.trim()) {
+      setEData((previous) => ({
+        ...previous, password: "Senha é obrigatoria"
+      }))
+
+      if (fdata.password.length < 6) {
+
+      setEData((previous) => ({
+        ...previous, password: "Sua senha precisa ter no minimo 6 caracteres"
+      }))
+
+    }
+    }
+    
+    if (!fdata.confirmPassword.trim()) {
+      setEData((previous) => ({
+        ...previous, confirmPassword: "Confirme sua senha"
+      }))
+
+          if (fdata.confirmPassword !== fdata.password) {
+      setEData((previous) => ({
+        ...previous,
+        confirmPassword: "As senhas não coincidem"
+      }))
+    }
+
+
+    }
+    if (!emailRegex.test(fdata.email)) {
+      setEData((previous)=>({
+        ...previous,
+        email:"Esse e-mail não é válido"
+      }))
+    }
+  }
 
   return (
     <div className={s.registerContainer}>
@@ -40,7 +97,7 @@ export function RegisterPage() {
 
       <div className={s.rightSection}>
         <h1 className={s.text}>Registro</h1>
-        <form className={s.form}>
+        <form onSubmit={handleSingIn} className={s.form}>
           <div className={s.field}>
             <label htmlFor="name">Nome</label>
             <Input
@@ -48,12 +105,19 @@ export function RegisterPage() {
               id="name"
               placeholder="Nome completo"
               value={fdata.name}
+              error={!!eData.name}
               onChange={(event) => {
                 setFData((previous) => ({
                   ...previous,
                   name: event.target.value
                 }))
+              
+                setEData((previous)=> ({
+                  ...previous,
+                  name:""
+                }))
               }}
+
             />
           </div>
           <div className={s.field}>
@@ -63,11 +127,16 @@ export function RegisterPage() {
               id="email"
               placeholder="Digite seu e-mail"
               value={fdata.email}
+              error={!!eData.email}
               onChange={(event) => {
                 setFData((previous) => (
                   { ...previous, email: event.target.value }
                 )
                 )
+               setEData((previous)=> ({
+                  ...previous,
+                  email:""
+                }))
               }
               }
             />
@@ -81,11 +150,16 @@ export function RegisterPage() {
               placeholder="********"
               variant="password"
               value={fdata.password}
+              error={!!eData.password}
               onChange={(event) => {
                 setFData((previous) => (
                   { ...previous, password: event.target.value }
                 )
                 )
+                setEData((previous)=> ({
+                  ...previous,
+                  password:""
+                }))                
               }
               }
             />
@@ -98,11 +172,16 @@ export function RegisterPage() {
               placeholder="********"
               variant="password"
               value={fdata.confirmPassword}
-              onChange={(event)=>{
-                setFData((previous)=> (
-                  {...previous, confirmPassword: event.target.value}
+              error={!!eData.confirmPassword}
+              onChange={(event) => {
+                setFData((previous) => (
+                  { ...previous, confirmPassword: event.target.value }
                 )
                 )
+                setEData((previous)=> ({
+                  ...previous,
+                  confirmPassword:""
+                }))                
               }
               }
 
