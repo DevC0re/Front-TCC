@@ -32,61 +32,86 @@ export function RegisterPage() {
 
   })
 
-
   const handleSingIn = (event: FormEvent) => {
+    let hasError = false;
     event.preventDefault();
 
-  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!fdata.name.trim()) {
       setEData((previous) => ({
 
         ...previous, name: "Nome é obrigatorio"
       }))
 
-
+      hasError = true
 
 
     }
+
     if (!fdata.email.trim()) {
       setEData((previous) => ({
         ...previous, email: "E-mail é obrigatorio"
       }))
 
+      hasError = true
+
+    } else {
+      if (!emailRegex.test(fdata.email)) {
+        setEData((previous) => ({
+          ...previous,
+          email: "Esse e-mail não é válido"
+          }))
+      hasError = true
+
+        }
     }
+
+
     if (!fdata.password.trim()) {
       setEData((previous) => ({
         ...previous, password: "Senha é obrigatoria"
       }))
+      hasError = true
 
+    } else {
       if (fdata.password.length < 6) {
 
-      setEData((previous) => ({
-        ...previous, password: "Sua senha precisa ter no minimo 6 caracteres"
-      }))
+        setEData((previous) => ({
+          ...previous, password: "Sua senha precisa ter no minimo 6 caracteres"
+        }))
+      hasError = true
 
+      }
     }
-    }
-    
+
     if (!fdata.confirmPassword.trim()) {
       setEData((previous) => ({
         ...previous, confirmPassword: "Confirme sua senha"
       }))
-
-          if (fdata.confirmPassword !== fdata.password) {
-      setEData((previous) => ({
-        ...previous,
-        confirmPassword: "As senhas não coincidem"
-      }))
-    }
-
+      hasError = true
 
     }
-    if (!emailRegex.test(fdata.email)) {
-      setEData((previous)=>({
-        ...previous,
-        email:"Esse e-mail não é válido"
-      }))
+    else {
+      if (fdata.confirmPassword !== fdata.password) {
+        setEData((previous) => ({
+          ...previous,
+          confirmPassword: "As senhas não coincidem"
+        }))
+        hasError = true
+
+      }
     }
+
+    if (!hasError) {
+      
+    
+    const user = {
+      email: fdata.email,
+      password: fdata.password
+    }
+    localStorage.setItem("user",JSON.stringify(user))
+}
   }
 
   return (
@@ -100,6 +125,7 @@ export function RegisterPage() {
         <form onSubmit={handleSingIn} className={s.form}>
           <div className={s.field}>
             <label htmlFor="name">Nome</label>
+          
             <Input
               type="text"
               id="name"
@@ -111,14 +137,17 @@ export function RegisterPage() {
                   ...previous,
                   name: event.target.value
                 }))
-              
-                setEData((previous)=> ({
+                
+                setEData((previous) => ({
                   ...previous,
-                  name:""
+                  name: ""
                 }))
+               
               }}
 
             />
+              {eData.name&& <span className={s.errorMensage}>{eData.name} </span>}
+
           </div>
           <div className={s.field}>
             <label htmlFor="email">E-mail</label>
@@ -133,13 +162,15 @@ export function RegisterPage() {
                   { ...previous, email: event.target.value }
                 )
                 )
-               setEData((previous)=> ({
+                setEData((previous) => ({
                   ...previous,
-                  email:""
+                  email: ""
                 }))
               }
-              }
-            />
+            }
+              />
+              
+              {eData.email&& <span className={s.errorMensage}>{eData.email} </span>}
 
           </div>
 
@@ -156,13 +187,15 @@ export function RegisterPage() {
                   { ...previous, password: event.target.value }
                 )
                 )
-                setEData((previous)=> ({
+                setEData((previous) => ({
                   ...previous,
-                  password:""
-                }))                
+                  password: ""
+                }))
               }
               }
             />
+              {eData.password&& <span className={s.errorMensage}>{eData.password} </span>}
+
           </div>
 
           <div className={s.field}>
@@ -178,14 +211,16 @@ export function RegisterPage() {
                   { ...previous, confirmPassword: event.target.value }
                 )
                 )
-                setEData((previous)=> ({
+                setEData((previous) => ({
                   ...previous,
-                  confirmPassword:""
-                }))                
+                  confirmPassword: ""
+                }))
               }
               }
 
             />
+              {eData.confirmPassword&& <span className={s.errorMensage}>{eData.confirmPassword} </span>}
+
           </div>
           <Button type="submit">Criar nova conta</Button>
         </form>

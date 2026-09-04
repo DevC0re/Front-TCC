@@ -12,6 +12,14 @@
   overflow: hidden;
   flex: 1.4;
 }
+.errorMensage {
+  display: flex;
+  padding: 0 8px;
+  align-items: center;
+  gap: 6px;
+  align-self: stretch;
+  color: red;
+}
 
 .leftSection::after{
     position: absolute;
