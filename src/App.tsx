@@ -1,5 +1,6 @@
 import { Homepage } from "./pages/HomePage"
 import { LoginPage } from "./pages/LoginPage"
+import { ProtectRoute } from "./components/ProtectedRoute"
 import { RegisterPage } from "./pages/SignInPage"
 import { BrowserRouter, Route, Routes } from "react-router-dom"
 function App() {
@@ -13,7 +14,13 @@ function App() {
     
     <Route path="/" element={<LoginPage/>}/>
 
-    <Route path="/Home" element={<Homepage/>}/>
+    <Route path="/Home" 
+    element={
+    <ProtectRoute>
+    <Homepage/>
+    </ProtectRoute>
+    }
+    />
     
     </Routes>
     </BrowserRouter>
