@@ -1,0 +1,115 @@
+@use "../../style/utils/variables" as *;
+
+.registerContainer {
+  display: flex;
+  min-height: 100vh;
+  background-color: $sky-blue;
+  flex-direction: row-reverse;
+}
+.rightSection {
+  position: relative;
+  overflow: hidden;
+  flex: 1.4;
+}
+
+.rightSection::after {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 800px;
+  background: linear-gradient(to bottom, transparent, $sky-blue);
+  pointer-events: none;
+  content: "";
+}
+
+.rightSection img {
+  object-fit: cover;
+  width: 100%;
+  height: 100%;
+}
+
+.leftSection {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  gap: 76px;
+}
+
+.text {
+  color: #000;
+  padding-top: 174px;
+}
+.form {
+  display: flex;
+  gap: 24px;
+  flex-direction: column;
+}
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.forgotPass {
+  display: flex;
+  flex-direction: row-reverse;
+  align-items: end;
+  gap: 6px;
+}
+
+.forgotPass a {
+  color: $teal;
+  font-weight: 600;
+}
+
+.forgotPass a:hover {
+  text-decoration: underline;
+  align-self: stretch;
+}
+
+.button {
+  gap: 166px;
+  padding-bottom: 12px;
+}
+
+.signInTxt {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  text-align: center;
+  color: $neutral-500;
+  font-size: 20px;
+}
+.signInTxt a:hover {
+  text-decoration: underline;
+  align-self: stretch;
+}
+.signInTxt a {
+  color: $teal;
+  font-weight: 600;
+}
+.loginGoogle {
+  display: flex;
+  width: 400px;
+  height: 62px;
+  justify-content: center;
+  align-items: center;
+  gap: 32px;
+  border-radius: 9999px;
+  border: 2px solid $neutral-200;
+}
+.buttonContainer {
+  padding-top: -20px;
+  gap: 20px;
+}
+.errorMensage {
+  display: flex;
+  padding: 0 8px;
+  align-items: center;
+  gap: 6px;
+  align-self: stretch;
+  color: red;
+}

@@ -1,0 +1,103 @@
+@use "../../style/utils/variables" as *;
+
+.registerContainer{
+    display: flex;
+    min-height: 100vh;
+    background-color: $sky-blue;
+    
+}
+.leftSection{
+
+  position: relative;
+  overflow: hidden;
+  flex: 1.4;
+}
+.errorMensage {
+  display: flex;
+  padding: 0 8px;
+  align-items: center;
+  gap: 6px;
+  align-self: stretch;
+  color: red;
+}
+
+.leftSection::after{
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 800px;
+    background: linear-gradient(to bottom, transparent, $sky-blue);
+    pointer-events: none;
+    content: "";
+}
+
+.leftSection img{
+    
+    object-fit: cover;
+    width: 100%;
+    height: 100% ;
+}
+
+.rightSection{
+    flex: 1;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    gap: 76px;
+}
+
+.text{
+    color: #000;
+    padding-top: 174px;
+}
+.form{
+    display: flex;
+    gap: 24px;
+    flex-direction: column;
+}
+.field{
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+.terms{
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+.termsNotice {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    text-align: center;
+    margin-top: -48px; 
+    color: $neutral-500;
+    font-size: 14px;
+}
+
+.terms a {
+    color: $teal;
+    font-weight: 600;
+}
+
+.terms a:hover {
+    text-decoration: underline;
+}
+
+.button{
+    gap: 166px;
+    padding-bottom: 12px;
+}
+
+.loginTxt {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    text-align: center;
+    margin-top: -48px; 
+    color: $neutral-500;
+    font-size: 20px;
+}

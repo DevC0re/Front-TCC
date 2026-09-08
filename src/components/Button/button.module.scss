@@ -1,0 +1,10 @@
+@use "../../style/utils/variables" as *;
+
+.button{
+
+    background-color: $teal;
+    width: 400px;
+    height: 44px;
+    color: white;
+    border-radius: 9999px;
+}
