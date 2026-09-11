@@ -31,22 +31,37 @@ export function Homepage() {
                     />
                 </div>
 
-                <div className="bestHospital">
+                <div className={s.box}>
+                    <div className={s.text}>
+
                     <h1>Bem vindo, nome</h1>
                     <p>Encontre os melhores serviços da sua região</p>
+                    
+                    </div>
 
-                    <div className="Carrossel">
+                    <div className={s.carousel}>
+
                         <img src="" alt="hospitais" />
+                        <img src="" alt="hospitais" />
+                        <img src="" alt="hospitais" />
+                    
+                    
                     </div>
 
                 </div>
 
-                <div className="nearHospital">
+                <div className={s.box}>
+                    <div className={s.text}>
+
                     <h1>Mais proximos á você </h1>
                     <p>Serviços de saúde pertinho de você</p>
+                    </div>
 
-                    <div className="Carrossel">
+                    <div className={s.carousel}>
                         <img src="" alt="Hospitais proximos" />
+                        <img src="" alt="hospitais" />
+                        <img src="" alt="hospitais" />
+                    
                     </div>
                 </div>
 
