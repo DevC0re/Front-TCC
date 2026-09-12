@@ -1,3 +1,5 @@
+import s   from "./HospitalCard.module.scss";
+import { Heart, MapPin, Star } from "lucide-react";
 
 interface Data {
     image: string;
@@ -9,34 +11,38 @@ interface Data {
     favorito: boolean;
 }
 export function HospitalCard({ image, name, endereco, situacao, avaliacao, type, favorito }: Data) {
-
     return (
+        
         <div>
 
-            <img src={image} alt="" />
+            <img src={image} alt="" className={s.img}/>
 
-            <div className="Favorite">
+            <div className={s.favorite}>
 
-                <h1>{name}</h1>
-
+                <h1 className={s.favoriteText}>{name}</h1>
+                <button className={s.favoriteIcon}>
+                    <Heart/>
+                    </button>
             </div>
 
-            <div>
-                <h1>{endereco}</h1>
+            <div className={s.route}>
+                <MapPin className={s.mapPin}/>
+                <p>{endereco}</p>
             </div>
 
-            <div>
+            <div className={s.infos}>
 
-                <div>
-                    <p></p>
+                <div className={s.situacao}>
+                 {situacao === true && <p>Aberto agora</p>}
                 </div>
 
-                <div>
-                    <p></p>
+                <div className={s.avaliacao}>
+                    <Star className={s.avaliacaoStar}/>
+                    <p>{avaliacao}</p>
                 </div>
 
-                <div>
-                    <p></p>
+                <div className={s.type}>
+                    <p>{type}</p>
                 </div>
 
             </div>

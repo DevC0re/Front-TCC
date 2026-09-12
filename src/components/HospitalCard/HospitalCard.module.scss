@@ -1,0 +1,102 @@
+@use "../../style/utils/variables" as *;
+
+.img{
+    width: 380px;
+    height: 230px;
+    border-radius: 10px;
+    object-fit: cover;
+}
+.favorite{
+    display: flex;
+
+}
+.favoriteText{
+
+    font-size: 22px;
+    font-weight: bold;
+    flex: 1;
+}
+.favoriteIcon{
+    width: 28px;
+    height: 26px;
+    color: red;
+    fill: red;
+}
+.route{
+    display: flex;
+    gap: 5px;
+
+}
+.route p{
+    font-size: 18px;
+    font-weight: 300;
+
+}
+.mapPin{
+    width: 27px;
+    height: 27px;
+    color:red;
+}
+
+.infos{
+    display: flex;
+    gap: 40px;
+    padding-top: 11px;
+    align-items: center;
+}
+.situacao{
+    background-color:rgba(78, 224, 117, 0.3 );
+    border-radius: 10px;
+    width: 122px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.situacao p{
+
+    color: #034214;
+    font-size: 15px;
+    font-weight: 500;
+}
+.avaliacao{
+    display: flex;
+    background-color:rgba(212, 212, 32, 0.3 );
+    border-radius: 10px;
+    width: 80px;
+    height: 38px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+.avaliacao p{
+
+    color: #BCBC00;
+    font-size: 15px;
+    font-weight: 500;
+    padding-bottom: 5px;
+    padding-top: 5px;
+}
+.avaliacaoStar{
+    color: #F9F949;
+    width: 24px;
+    height: 24px;
+}
+
+.type{
+    display: flex;
+    background-color:rgba(78, 175, 224, 0.3 );
+    border-radius: 10px;
+    width: 80px;
+    height: 38px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.type p{
+
+    color: #0739FF;
+    font-size: 18px;
+    font-weight: 500;
+}
