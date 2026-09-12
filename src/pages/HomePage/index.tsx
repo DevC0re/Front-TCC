@@ -1,6 +1,7 @@
 import { Search } from "lucide-react";
 import { Input } from "../../components/Input";
 import s from "./Home.module.scss";
+import { HospitalCard } from "../../components/HospitalCard";
 
 
 export function Homepage() {
@@ -16,6 +17,7 @@ export function Homepage() {
                 <img src="" alt="Logo" />
                 <img src="" alt="Logo" />
                 <img src="" alt="Logo" />
+                
                 </div>
                 
                </aside>
@@ -41,10 +43,35 @@ export function Homepage() {
 
                     <div className={s.carousel}>
 
-                        <img src="" alt="hospitais" />
-                        <img src="" alt="hospitais" />
-                        <img src="" alt="hospitais" />
-                    
+                <HospitalCard
+                image="123"
+                name="Hospital Geral do Grajau"
+                endereco="Rua francisco Octavio Pacca"
+                situacao= {true}
+                avaliacao={4.9}
+                type="SUS"
+                favorito = {true}
+                />
+
+                  <HospitalCard
+                image="123"
+                name="Hospital Geral do Grajau"
+                endereco="Rua francisco Octavio Pacca"
+                situacao= {true}
+                avaliacao={4.9}
+                type="SUS"
+                favorito = {true}
+                />
+                
+                <HospitalCard
+                image="123"
+                name="Hospital Geral do Grajau"
+                endereco="Rua francisco Octavio Pacca"
+                situacao= {true}
+                avaliacao={4.9}
+                type="SUS"
+                favorito = {true}
+                />  
                     
                     </div>
 
