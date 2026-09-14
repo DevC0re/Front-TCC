@@ -8,19 +8,28 @@
 }
 .favorite{
     display: flex;
-
+   align-items: center;
+    justify-content: space-between;
+    width: 100%;
+}
+.card {
+    width: 380px;
+    min-width: 0;
 }
 .favoriteText{
 
     font-size: 22px;
     font-weight: bold;
     flex: 1;
+    min-width: 0px;
 }
 .favoriteIcon{
     width: 28px;
     height: 26px;
     color: red;
     fill: red;
+    flex-shrink: 0;
+
 }
 .route{
     display: flex;
@@ -44,7 +53,7 @@
     padding-top: 11px;
     align-items: center;
 }
-.situacao{
+.status{
     background-color:rgba(78, 224, 117, 0.3 );
     border-radius: 10px;
     width: 122px;
@@ -53,13 +62,13 @@
     align-items: center;
     justify-content: center;
 }
-.situacao p{
+.status p{
 
     color: #034214;
     font-size: 15px;
     font-weight: 500;
 }
-.avaliacao{
+.rating{
     display: flex;
     background-color:rgba(212, 212, 32, 0.3 );
     border-radius: 10px;
@@ -70,7 +79,7 @@
     justify-content: center;
     gap: 8px;
 }
-.avaliacao p{
+.rating p{
 
     color: #BCBC00;
     font-size: 15px;
@@ -78,7 +87,7 @@
     padding-bottom: 5px;
     padding-top: 5px;
 }
-.avaliacaoStar{
+.ratingStar{
     color: #F9F949;
     width: 24px;
     height: 24px;

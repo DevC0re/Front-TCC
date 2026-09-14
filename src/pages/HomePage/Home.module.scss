@@ -25,12 +25,14 @@
 }
 .asSide{
     display: flex;
-    width: 114px;
+    min-width: 114px;
     height: 100vh;
     background-color: $teal;
     padding: 60px 50px 30px 50px;
     flex-direction: column;
-    
+    position: sticky;
+    top: 0;
+   
 }
 .navLinks{
     display: flex;
@@ -64,4 +66,19 @@
     padding-top: 60px ;
     display: flex;
     gap: 45px;
+    flex-wrap: wrap;
+}
+.boxHighlight {
+    background-color: $white;
+    padding: 20px;
+    width: fit-content;
+    border-radius: 10px;
+    border: 1px solid black;
+}
+.boxNearby{
+    background-color: $white;
+    padding: 20px;
+    width: fit-content;
+    border-radius: 10px;
+    border: 1px solid black;
 }

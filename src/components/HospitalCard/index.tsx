@@ -1,5 +1,6 @@
 import s   from "./HospitalCard.module.scss";
 import { Heart, MapPin, Star } from "lucide-react";
+import { useState } from "react";
 
 interface Data {
     image: string;
@@ -11,17 +12,21 @@ interface Data {
     favorito: boolean;
 }
 export function HospitalCard({ image, name, endereco, situacao, avaliacao, type, favorito }: Data) {
+    
+    const [favoritoAtual, setFavoritoAtual] = useState(favorito);
+
     return (
         
-        <div>
+
+        <div className={s.card}>
 
             <img src={image} alt="" className={s.img}/>
 
             <div className={s.favorite}>
 
                 <h1 className={s.favoriteText}>{name}</h1>
-                <button className={s.favoriteIcon}>
-                    <Heart/>
+                <button onClick ={()=> setFavoritoAtual(!favoritoAtual)} className={s.favoriteIcon}>
+                    <Heart fill={favoritoAtual? "currentColor": "none"}/>
                     </button>
             </div>
 
@@ -34,6 +39,7 @@ export function HospitalCard({ image, name, endereco, situacao, avaliacao, type,
 
                 <div className={s.situacao}>
                  {situacao === true && <p>Aberto agora</p>}
+                 {situacao === false && <p>Fechado</p>}
                 </div>
 
                 <div className={s.avaliacao}>

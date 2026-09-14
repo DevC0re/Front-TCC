@@ -1,4 +1,4 @@
-import { Homepage } from "./pages/HomePage"
+import { HomePage } from "./pages/HomePage"
 import { LoginPage } from "./pages/LoginPage"
 import { ProtectRoute } from "./components/ProtectedRoute"
 import { RegisterPage } from "./pages/SignInPage"
@@ -16,9 +16,9 @@ function App() {
 
     <Route path="/Home" 
     element={
-    <ProtectRoute>
-    <Homepage/>
-    </ProtectRoute>
+   
+    <HomePage/>
+   
     }
     />
     
