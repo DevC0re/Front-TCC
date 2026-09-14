@@ -5,15 +5,15 @@ import { useState } from "react";
 interface Data {
     image: string;
     name: string;
-    endereco: string;
-    situacao: boolean;
-    avaliacao: number;
+    adress: string;
+    status: boolean;
+    rating: number;
     type: "SUS" | "Convênio";
-    favorito: boolean;
+    favorite: boolean;
 }
-export function HospitalCard({ image, name, endereco, situacao, avaliacao, type, favorito }: Data) {
+export function HospitalCard({ image, name, adress, status, rating, type, favorite }: Data) {
     
-    const [favoritoAtual, setFavoritoAtual] = useState(favorito);
+    const [favoritoAtual, setFavoritoAtual] = useState(favorite);
 
     return (
         
@@ -32,19 +32,19 @@ export function HospitalCard({ image, name, endereco, situacao, avaliacao, type,
 
             <div className={s.route}>
                 <MapPin className={s.mapPin}/>
-                <p>{endereco}</p>
+                <p>{adress}</p>
             </div>
 
             <div className={s.infos}>
 
-                <div className={s.situacao}>
-                 {situacao === true && <p>Aberto agora</p>}
-                 {situacao === false && <p>Fechado</p>}
+                <div className={s.status}>
+                 {status === true && <p>Aberto agora</p>}
+                 {status === false && <p>Fechado</p>}
                 </div>
 
-                <div className={s.avaliacao}>
-                    <Star className={s.avaliacaoStar}/>
-                    <p>{avaliacao}</p>
+                <div className={s.rating}>
+                    <Star className={s.ratingStar} fill="currentColor"/>
+                    <p>{rating}</p>
                 </div>
 
                 <div className={s.type}>
