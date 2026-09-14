@@ -2,6 +2,8 @@ import { Input } from "../../components/Input";
 import s from "./Home.module.scss";
 import { HospitalCard } from "../../components/HospitalCard";
 import { Hospitals, nearbyHospitals } from "../../data/Hospital";
+import logo from "../../assets/Logo.png";
+import { Heart, House, User } from "lucide-react";
 
 export function HomePage() {
 
@@ -10,12 +12,22 @@ export function HomePage() {
             <div className={s.content}>
 
                 <aside className={s.asSide}>
-                    <img src="" alt="Logo" />
+                    <img src= {logo} alt="Logo" />
 
                     <div className={s.navLinks}>
-                        <img src="" alt="Logo" />
-                        <img src="" alt="Logo" />
-                        <img src="" alt="Logo" />
+                        <button className={s.navIcon}>
+                        <House/>
+                        </button>
+                        <button className={s.navIcon}>
+
+                        <User/>
+                        </button>
+
+                        <button  className={s.navIcon}>
+
+                        <Heart/>
+
+                        </button>
 
                     </div>
 
@@ -40,7 +52,7 @@ export function HomePage() {
 
                         </div>
 
-                        <div className={s.boxDestaque}>
+                        <div className={s.boxHighlight}>
 
                             <div className={s.carousel}>
 
@@ -48,11 +60,11 @@ export function HomePage() {
                                     <HospitalCard
                                         image={hospital.image}
                                         name={hospital.name}
-                                        endereco={hospital.adress}
-                                        situacao={hospital.status}
-                                        avaliacao={hospital.rating}
+                                        adress={hospital.adress}
+                                        status={hospital.status}
+                                        rating={hospital.rating}
                                         type={hospital.type}
-                                        favorito={hospital.favorite}
+                                        favorite={hospital.favorite}
                                     />
                                 ))}
 
@@ -70,18 +82,18 @@ export function HomePage() {
                             <p>Serviços de saúde pertinho de você</p>
                         </div>
 
-                        <div className={s.boxProximos}>
+                        <div className={s.boxNearby}>
 
                             <div className={s.carousel}>
                                 {nearbyHospitals.map((hospital) => (
                                     <HospitalCard
                                         image={hospital.image}
                                         name={hospital.name}
-                                        endereco={hospital.adress}
-                                        situacao={hospital.status}
-                                        avaliacao={hospital.rating}
+                                        adress={hospital.adress}
+                                        status={hospital.status}
+                                        rating={hospital.rating}
                                         type={hospital.type}
-                                        favorito={hospital.favorite}
+                                        favorite={hospital.favorite}
                                     />
                                 ))}
 
