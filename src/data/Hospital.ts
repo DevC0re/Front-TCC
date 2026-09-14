@@ -77,13 +77,4 @@ export const nearbyHospitals: Hospital[] = [
     favorite: true,
   },
 
-  {
-    image: saoLuiz,
-    name: "Hospital São Luiz",
-    adress: "Rua Dr. Alceu de Campos Rodrigues",
-    status: true,
-    rating: 4.8,
-    type: "Convênio",
-    favorite: false,
-  },
 ];
