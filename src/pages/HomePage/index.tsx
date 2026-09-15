@@ -4,28 +4,51 @@ import { HospitalCard } from "../../components/HospitalCard";
 import { Hospitals, nearbyHospitals } from "../../data/Hospital";
 import logo from "../../assets/Logo.png";
 import { Heart, House, User } from "lucide-react";
+import { useState } from "react";
+import { ComingSoon } from "../../components/ComingSoon";
 
 export function HomePage() {
 
+    const [search, setSearch] = useState("")
+
+    const filteredHospitals = Hospitals.filter((hospital) =>
+        hospital.name.toLowerCase().includes(search.toLowerCase()))
+
+    const [isModalOpen , setIsModalOpen] = useState(false);
+
     return (
         <>
+                <ComingSoon
+                isOpen={isModalOpen}
+                onClose={()=> setIsModalOpen(false)}
+                />
             <div className={s.content}>
 
                 <aside className={s.asSide}>
-                    <img src= {logo} alt="Logo" />
+                    <img src={logo} alt="Logo" />
 
                     <div className={s.navLinks}>
-                        <button className={s.navIcon}>
-                        <House/>
+                        <button 
+                        className={s.navIcon}
+                        onClick={()=>window.scrollTo({
+                            top: 0,
+                            behavior :"smooth"
+                        })}
+                        >
+                            <House />
                         </button>
-                        <button className={s.navIcon}>
-
-                        <User/>
+                        <button className={s.navIcon}
+                        onClick={()=>setIsModalOpen(true)}
+                        >
+                            <User />
                         </button>
 
-                        <button  className={s.navIcon}>
+                        <button 
+                        className={s.navIcon}
+                        onClick={()=>setIsModalOpen(true)}
+                        >
 
-                        <Heart/>
+                            <Heart />
 
                         </button>
 
@@ -41,13 +64,15 @@ export function HomePage() {
                             id="search"
                             placeholder="Busque Hospitais"
                             variant="search"
+                            value={search}
+                            onChange={(e) => setSearch(e.target.value)}
                         />
                     </div>
 
                     <div className={s.box}>
                         <div className={s.text}>
 
-                            <h1>Bem vindo</h1>
+                            <h1>Bem vindo, Nome</h1>
                             <p>Encontre os melhores serviços da sua região</p>
 
                         </div>
@@ -56,18 +81,23 @@ export function HomePage() {
 
                             <div className={s.carousel}>
 
-                                {Hospitals.map((hospital) => (
-                                    <HospitalCard
-                                        image={hospital.image}
-                                        name={hospital.name}
-                                        adress={hospital.adress}
-                                        status={hospital.status}
-                                        rating={hospital.rating}
-                                        type={hospital.type}
-                                        favorite={hospital.favorite}
-                                    />
-                                ))}
+                                {filteredHospitals.length > 0 ? (
 
+                                    filteredHospitals.map((hospital => (
+                                        <HospitalCard
+                                            image={hospital.image}
+                                            name={hospital.name}
+                                            adress={hospital.adress}
+                                            status={hospital.status}
+                                            rating={hospital.rating}
+                                            type={hospital.type}
+                                            favorite={hospital.favorite}
+                                        />
+                                    ))
+                                    )
+                                ) : (
+                                    <p>Não encontramos hospitais para essa busca</p>
+                                )}
 
 
                             </div>

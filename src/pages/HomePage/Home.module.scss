@@ -21,19 +21,19 @@
     flex-direction: column;
     flex: 1;
     padding: 20px; 
-    
+    margin-left: 114px;    
 }
 .asSide {
   display: flex;
-  box-sizing: border-box;
   width: 114px;
-  min-width: 114px;
   height: 100vh;
   background-color: $teal;
-  padding: 60px 20px 30px;
+  padding: 60px 20px 30px 50px;
   flex-direction: column;
-  position: sticky;
+  position: fixed;
   top: 0;
+  left: 0;
+  box-sizing: border-box;
 }
 .navLinks {
   display: flex;
@@ -64,7 +64,6 @@
     gap: 10px;
 }
 .carousel{
-    padding-top: 60px ;
     display: flex;
     gap: 45px;
     flex-wrap: wrap;
@@ -98,4 +97,45 @@
 .navIcon img {
   width: 20px;
   height: 20px;
+}
+@media (max-width: 700px) {
+
+    .content{
+        width: 100%;
+        min-height: 100vh;
+        background-color: $sky-blue;
+        overflow-x: hidden;
+    }
+
+    .asSide {
+        width: 70px;
+        min-width: 70px;
+        height: 100%;
+        padding: 30px 10px;
+        box-sizing: border-box;
+    }
+
+    .main {
+        margin-left: 70px;
+        padding: 10px;
+        min-height: 100vh;
+        min-width: 0;
+        box-sizing: border-box;
+    }
+
+    .box {
+        padding: 20px 10px;
+        box-sizing: border-box;
+    }
+
+    .boxHighlight,
+    .boxNearby {
+        width: 100%;
+        box-sizing: border-box;
+    }
+
+    .carousel {
+        gap: 20px;
+        width: 100%;
+    }
 }
