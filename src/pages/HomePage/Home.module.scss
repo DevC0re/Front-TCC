@@ -1,0 +1,141 @@
+@use "../../style/utils/variables.scss" as *;
+
+.content{
+    display: flex;
+    min-height: 100vh;
+    background-color: $sky-blue;
+}
+.searchBar{
+    display: flex;
+    padding: 10px;
+    justify-content: center;
+    align-items: center;
+    border-radius: 10px;
+    background-color: white;
+    width: 100%;
+    height: 50px;
+}
+.main{
+
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    padding: 20px; 
+    margin-left: 114px;    
+}
+.asSide {
+  display: flex;
+  width: 114px;
+  height: 100vh;
+  background-color: $teal;
+  padding: 60px 20px 30px 50px;
+  flex-direction: column;
+  position: fixed;
+  top: 0;
+  left: 0;
+  box-sizing: border-box;
+}
+.navLinks {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 20px;
+  margin-top: auto;
+  margin-bottom: auto;
+}
+.searchInput{
+    display: flex;
+    padding: 10px;
+    align-items: center;
+    gap: 10px;
+    flex: 1 0 0;
+    align-self: stretch;
+    background-color: $neutral-200 ;
+    border-radius: 10px;
+}
+.box{
+    padding: 40px;
+
+}
+.text{
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+.carousel{
+    display: flex;
+    gap: 45px;
+    flex-wrap: wrap;
+}
+.boxHighlight {
+    background-color: $white;
+    padding: 20px;
+    width: fit-content;
+    border-radius: 10px;
+    border: 1px solid black;
+    margin-top: 20px;
+}
+.boxNearby{
+    background-color: $white;
+    padding: 20px;
+    width: fit-content;
+    border-radius: 10px;
+    border: 1px solid black;
+    margin-top: 20px;
+}
+.navIcon {
+  width: 48px;
+  height: 48px;
+  border: 1px solid #000;
+  border-radius: 50%;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.navIcon img {
+  width: 20px;
+  height: 20px;
+}
+@media (max-width: 700px) {
+
+    .content{
+        width: 100%;
+        min-height: 100vh;
+        background-color: $sky-blue;
+        overflow-x: hidden;
+    }
+
+    .asSide {
+        width: 70px;
+        min-width: 70px;
+        height: 100%;
+        padding: 30px 10px;
+        box-sizing: border-box;
+    }
+
+    .main {
+        margin-left: 70px;
+        padding: 10px;
+        min-height: 100vh;
+        min-width: 0;
+        box-sizing: border-box;
+    }
+
+    .box {
+        padding: 20px 10px;
+        box-sizing: border-box;
+    }
+
+    .boxHighlight,
+    .boxNearby {
+        width: 100%;
+        box-sizing: border-box;
+    }
+
+    .carousel {
+        gap: 20px;
+        width: 100%;
+    }
+}
