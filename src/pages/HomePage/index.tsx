@@ -29,27 +29,30 @@ export function HomePage() {
 
                     <div className={s.navLinks}>
                         <button 
-                        className={s.navIcon}
+                        className={s.navButton}
                         onClick={()=>window.scrollTo({
                             top: 0,
                             behavior :"smooth"
                         })}
                         >
-                            <House />
+                            <House className={s.navIcon} />
+                            <span>Home</span>
                         </button>
-                        <button className={s.navIcon}
+
+                        <button className={s.navButton}
                         onClick={()=>setIsModalOpen(true)}
                         >
-                            <User />
+                            <User className={s.navIcon} />
+                        <span>User</span>
                         </button>
 
                         <button 
-                        className={s.navIcon}
+                        className={s.navButton}
                         onClick={()=>setIsModalOpen(true)}
                         >
 
-                            <Heart />
-
+                            <Heart className={s.navIcon}/>
+                        <span>Favoritos</span>
                         </button>
 
                     </div>
