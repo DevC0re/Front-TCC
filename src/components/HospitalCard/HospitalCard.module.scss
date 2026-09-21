@@ -1,0 +1,233 @@
+@use "../../style/utils/variables" as *;
+
+.card {
+    width: 360px;
+    min-width: 0;
+
+    box-sizing: border-box;
+
+    padding: 12px;
+
+    background-color: $beige;
+    border-radius: 12px;
+
+    display: flex;
+    flex-direction: column;
+}
+
+/* IMAGEM */
+
+.img {
+    width: 100%;
+    height: 200px;
+
+    object-fit: cover;
+    border-radius: 10px;
+}
+
+/* NOME + FAVORITO */
+
+.favorite {
+    display: flex;
+    align-items: flex-start;
+
+    width: 100%;
+
+    margin-top: 8px;
+
+    gap: 12px;
+}
+
+.favoriteText {
+    margin: 0;
+    padding: 0;
+
+    flex: 1;
+    min-width: 0;
+
+    font-size: 20px;
+    font-weight: 700;
+    line-height: 1.2;
+}
+
+.favoriteIcon {
+    width: 24px;
+    height: 24px;
+
+    margin-top: 2px;
+
+    color: red;
+    fill: red;
+
+    flex-shrink: 0;
+}
+
+/* ENDEREÇO */
+
+.route {
+    display: flex;
+    align-items: center;
+
+    width: 100%;
+
+    margin-top: 14px;
+
+    gap: 6px;
+}
+
+.route p {
+    margin: 0;
+
+    font-size: 16px;
+    font-weight: 400;
+    line-height: 1.2;
+}
+
+.mapPin {
+    width: 23px;
+    height: 23px;
+
+    color: red;
+
+    flex-shrink: 0;
+}
+
+/* INFORMAÇÕES */
+
+.infos {
+    display: flex;
+    align-items: center;
+
+    width: 100%;
+
+    margin-top: 20px;
+
+    gap: 14px;
+}
+
+/* STATUS */
+
+.status {
+    width: 115px;
+    height: 30px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    background-color: rgba(78, 224, 117, 0.3);
+    border-radius: 9px;
+
+    flex-shrink: 0;
+}
+
+.status p {
+    margin: 0;
+
+    color: #034214;
+
+    font-size: 14px;
+    font-weight: 500;
+}
+
+/* AVALIAÇÃO */
+
+.rating {
+    width: 72px;
+    height: 36px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    gap: 6px;
+
+    background-color: rgba(212, 212, 32, 0.3);
+    border-radius: 9px;
+
+    flex-shrink: 0;
+}
+
+.rating p {
+    margin: 0;
+
+    color: #bcbc00;
+
+    font-size: 14px;
+    font-weight: 500;
+}
+
+.ratingStar {
+    width: 21px;
+    height: 21px;
+
+    color: #f9f949;
+}
+
+/* TIPO */
+
+.type {
+    width: 82px;
+    height: 36px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    background-color: rgba(78, 175, 224, 0.3);
+    border-radius: 9px;
+
+    flex-shrink: 0;
+}
+
+.type p {
+    margin: 0;
+
+    color: #0739ff;
+
+    font-size: 16px;
+    font-weight: 500;
+}
+
+/* MOBILE */
+
+@media (max-width: 500px) {
+
+    .card {
+        width: 100%;
+        height: auto;
+
+        padding: 10px;
+    }
+
+    .img {
+        width: 100%;
+        height: auto;
+        aspect-ratio: 16 / 10;
+    }
+
+    .favoriteText {
+        font-size: 18px;
+    }
+
+    .route p {
+        font-size: 15px;
+    }
+
+    .infos {
+        gap: 8px;
+        flex-wrap: wrap;
+    }
+
+    .status {
+        width: 115px;
+    }
+
+    .rating {
+        width: 70px;
+    }
+
+    .type {
+        width: 82px;
+    }
+}
