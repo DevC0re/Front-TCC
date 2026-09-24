@@ -31,7 +31,7 @@ export function HospitalCard({ image, name, adress, status, rating, type, favori
             </div>
 
             <div className={s.route}>
-                <MapPin className={s.mapPin}/>
+                <MapPin className={s.mapPin} fill="red"/>
                 <p>{adress}</p>
             </div>
 

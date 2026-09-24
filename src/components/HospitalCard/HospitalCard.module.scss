@@ -30,22 +30,22 @@
 .favorite {
     display: flex;
     align-items: flex-start;
-
     width: 100%;
 
     margin-top: 8px;
-
     gap: 12px;
+
+    min-height: 48px;
 }
 
 .favoriteText {
     margin: 0;
-    padding: 0;
+    padding: 0px;
 
     flex: 1;
     min-width: 0;
 
-    font-size: 20px;
+    font-size: 22px;
     font-weight: 700;
     line-height: 1.2;
 }
@@ -78,7 +78,7 @@
 .route p {
     margin: 0;
 
-    font-size: 16px;
+    font-size: 20px;
     font-weight: 400;
     line-height: 1.2;
 }
@@ -87,7 +87,6 @@
     width: 23px;
     height: 23px;
 
-    color: red;
 
     flex-shrink: 0;
 }
@@ -100,7 +99,8 @@
 
     width: 100%;
 
-    margin-top: 20px;
+    padding: 20px;
+    margin-top: auto;
 
     gap: 14px;
 }
@@ -124,7 +124,7 @@
 .status p {
     margin: 0;
 
-    color: #034214;
+    color: #000;
 
     font-size: 14px;
     font-weight: 500;
@@ -151,7 +151,7 @@
 .rating p {
     margin: 0;
 
-    color: #bcbc00;
+    color: #000;
 
     font-size: 14px;
     font-weight: 500;
@@ -183,7 +183,7 @@
 .type p {
     margin: 0;
 
-    color: #0739ff;
+    color: #000;
 
     font-size: 16px;
     font-weight: 500;

@@ -22,7 +22,7 @@ export function HomePage() {
                 isOpen={isModalOpen}
                 onClose={()=> setIsModalOpen(false)}
                 />
-            <div className={s.content}>
+            <div className={s.body}>
 
                 <aside className={s.asSide}>
                     <img src={logo} alt="Logo" />
@@ -42,8 +42,10 @@ export function HomePage() {
                         <button className={s.navButton}
                         onClick={()=>setIsModalOpen(true)}
                         >
+                            
                             <User className={s.navIcon} />
                         <span>User</span>
+                        
                         </button>
 
                         <button 
