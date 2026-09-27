@@ -1,11 +1,11 @@
 import type { InputHTMLAttributes } from "react";
 import { useState, } from "react";
-import {Eye, EyeOff} from "lucide-react";
+import {Eye, EyeOff, Search} from "lucide-react";
 import s from "./input.module.scss";
 
 interface InputProps extends InputHTMLAttributes <HTMLInputElement> {
 
-    variant?:"default" |"password"
+    variant?:"default" |"password"|"search"
     type?:"email"|"text"|"password"
     error?: boolean
 } 
@@ -25,6 +25,7 @@ export function Input({ type, id , placeholder, variant= "default",error, ...res
 
     return(
         <div className={s.inputWrapper}>
+        {variant ==="search" && <Search className={s.search}/>} 
         <input 
         className={`${s.input} ${error ? s.inputError:""}`}
         type = {resolvedType}
@@ -45,6 +46,8 @@ export function Input({ type, id , placeholder, variant= "default",error, ...res
                 </button>
 
         )}
+
+        
         
         </div>
     );

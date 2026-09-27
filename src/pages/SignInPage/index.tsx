@@ -3,6 +3,7 @@ import { Input } from "../../components/Input";
 import hospital from "../../assets/Hospital.jpg";
 import s from "./SignInPage.module.scss";
 import { useState, type FormEvent } from "react";
+import { Link, useNavigate } from "react-router-dom";
 
 interface RegisterFormData {
   name: string;
@@ -18,6 +19,8 @@ interface RegisterFormError {
 }
 
 export function RegisterPage() {
+
+  const navigate = useNavigate()
 
 
   const [fdata, setFData] = useState<RegisterFormData>({
@@ -111,7 +114,9 @@ export function RegisterPage() {
       password: fdata.password
     }
     localStorage.setItem("user",JSON.stringify(user))
-}
+    navigate("/")
+
+  }
   }
 
   return (
@@ -229,7 +234,7 @@ export function RegisterPage() {
           <p>
             <div className={s.terms}>
               <span>Você já tem uma conta? </span>
-              <a href="">Faça o Login</a>
+              <Link to="/">Faça o Login</Link>
             </div>
           </p>
         </div>
