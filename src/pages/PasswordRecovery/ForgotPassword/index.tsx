@@ -1,6 +1,6 @@
 import s from "./forgotPassword.module.scss";
-import { Input } from "../../components/Input";
-import { Button } from "../../components/Button";
+import { Input } from "../../../components/Input";
+import { Button } from "../../../components/Button";
 export function ForgotPassword() {
   return (
     <div className={s.body}>
