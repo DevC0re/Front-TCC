@@ -5,6 +5,7 @@ interface ButtonProps{
 
     children: React.ReactNode;
     type?: "submit"| "button";
+    disabled?: boolean;
 
 } 
 
