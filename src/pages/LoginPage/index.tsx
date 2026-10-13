@@ -3,42 +3,83 @@ import { Input } from "../../components/Input";
 import hospital from "../../assets/Hospital.jpg";
 import s from "./LoginPage.module.scss";
 import google from "../../assets/googleIcon.svg"
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import type { FormEvent } from "react";
 import { Link, Navigate, useNavigate } from "react-router-dom";
+import {login} from "../../service/authService"
+import axios from "axios";
 
+interface LoginForm {
+  email: string;
+  password:string;
+}
+
+interface LoginFormError{
+
+  email?:string
+  password?:string
+}
 
 export function LoginPage() {
 
-  const [email, setEmail] = useState("")
-  const [password, setPassword] = useState("")
+
+  const [isLoading , setIsLoading] = useState(false);
+
+  const [lForm, setLForm] = useState<LoginForm>({
+    email :' ',
+    password :' ',
+
+  })
+
+  const [eForm, setEForm] = useState<LoginFormError>({
+
+  })
+
   const [error, setError] = useState("")
   const navigate = useNavigate()
-  const handleLogin = (event: FormEvent) => {
+  const handleLogin = async (event: FormEvent) => {
 
     event.preventDefault();
 
     const userData = localStorage.getItem("user")
 
-    if (!email || !password) {
+    if (!lForm.email || !lForm.password) {
 
       setError("Preencha todos os campos")
       return
     }
 
-    if (!userData) {
-      setError("Nenhuma conta cadastrada. Crie uma conta primeiro")
-      return
-    }
-    const user = JSON.parse(userData)
 
-    if (email !== user.email || password !== user.password) {
-      setError("Email ou senha incorretos. Por favor, verifique")
-      return
+  
+    try {
+      setIsLoading(true)
 
+      const response = await login({
+
+        email: lForm.email,
+        senha: lForm.password,
+  
+      })
+      const token = response.data;
+      localStorage.setItem("token", token);
+      navigate("/home")
+
+    } catch (error) {
+
+  
+      if (axios.isAxiosError(error)) {
+        if (error.response?.status === 403) {
+          
+          setError("E-mail ou senhas incorretos")
+        }
+
+      }
+
+
+    }finally{
+      setIsLoading(false)
     }
-    localStorage.setItem("isLoggedIn", "true")
-    navigate("/Home")
+
   }
 
 
@@ -59,13 +100,15 @@ export function LoginPage() {
               type="email"
               id="email"
               placeholder="Digite seu e-mail"
-              value={email}
+              value={lForm.email}
               onChange={(event) => {
-                setEmail(event.target.value)
+                setLForm((previous)=>({
+                  ...previous,
+                  email : event.target.value
+                }))
                 setError("")
               }}
 
-              error={!!error}
             />
           </div>
 
@@ -78,10 +121,12 @@ export function LoginPage() {
               id="password"
               placeholder="********"
               variant="password"
-              value={password}
+              value={lForm.password}
               onChange={(event) => {
-                setPassword(event.target.value)
-                setError("")
+              setLForm((previous)=>({
+                ...previous,
+                password : event.target.value
+              }))
               }
               }
               error={!!error}
@@ -95,7 +140,9 @@ export function LoginPage() {
 
           {error && <p className={s.errorMensage}>{error}</p>}
 
-          <Button type="submit">Conecte-se</Button>
+          <Button type="submit" disabled= {isLoading}>
+            {isLoading ?  "Conectando" : "Conecte-se"}
+          </Button>
 
         </form >
 
@@ -104,12 +151,12 @@ export function LoginPage() {
         </div>
 
         <div className={s.signInTxt}>
-          <p>
+          
             <div className={s.terms}>
               <span>Você não tem uma conta? </span>
               <Link to="/signup">Clique aqui</Link>
             </div>
-          </p>
+      
         </div>
 
       </div>
