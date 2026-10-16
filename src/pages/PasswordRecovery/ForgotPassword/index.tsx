@@ -1,8 +1,16 @@
 import s from "./forgotPassword.module.scss";
 import { Input } from "../../../components/Input";
 import { Button } from "../../../components/Button";
+import { useState } from "react";
+
 export function ForgotPassword() {
+
+  const [email, setEmail] = useState("")
+  
+
   return (
+
+
     <div className={s.body}>
       <div className={s.content}>
         <div className={s.box}>
@@ -16,11 +24,23 @@ export function ForgotPassword() {
           </div>
           <div className={s.input}>
             <label htmlFor="email">E-mail</label>
-            <Input className={s.form} placeholder="Enter your email" />
+            <Input 
+            className={s.form} 
+            placeholder="Enter your email" 
+            value={email}
+            onChange={(e)=>{
+              setEmail(e.target.value)
+            }}
+            />
           </div>
         </div>
         <div className={s.button}>
-          <Button children="Enviar instrução de redefinição" />
+          
+          <Button 
+          children="Enviar instrução de redefinição" 
+          type="submit" 
+          />
+        
         </div>
       </div>
     </div>
