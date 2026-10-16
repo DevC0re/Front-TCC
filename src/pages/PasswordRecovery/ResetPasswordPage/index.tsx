@@ -1,6 +1,7 @@
 import s from "./ResetPasswordPage.module.scss";
 import { Input } from "../../../components/Input";
 import { Button } from "../../../components/Button";
+
 export function ResetPassword() {
   return (
     <div className={s.body}>
@@ -28,7 +29,7 @@ export function ResetPassword() {
           </div>
         </div>
         <div className={s.button}>
-          <Button children="Enviar instrução de redefinição" />
+          <Button children="Enviar instrução de redefinição" type="submit"/>
         </div>
       </div>
     </div>
