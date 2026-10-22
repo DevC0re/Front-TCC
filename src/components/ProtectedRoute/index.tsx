@@ -1,22 +1,20 @@
-import type { ReactNode } from "react";
-import { Navigate } from "react-router-dom";
+import { Navigate, Outlet } from "react-router-dom";
+import { isTokenValid } from "../../style/utils/utils";
 
-interface ProtectRouteProps {
-
-    children: ReactNode
-}
-
-export function ProtectRoute({ children }: ProtectRouteProps) {
+export function ProtectRoute() {
 
 
-    const sign = localStorage.getItem("isLoggedIn")
+    const token = localStorage.getItem("token")
 
-    if (sign !== "true") {
-        return <Navigate to={"/"} />
+    if (!token|| !isTokenValid(token)) {
+        
+        localStorage.removeItem("token")
 
+        
+        return <Navigate to="/" replace />
     }
 
-    return children
+    return <Outlet/>
 
 
 }

@@ -4,11 +4,10 @@ import { HospitalCard } from "../../components/HospitalCard";
 import { Hospitals, nearbyHospitals } from "../../data/Hospital";
 import logo from "../../assets/Logo.png";
 import { Heart, House, User } from "lucide-react";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { ComingSoon } from "../../components/ComingSoon";
-import { Button } from "../../components/Button";
 import { useNavigate } from "react-router-dom";
-import { api } from "../../service/api";
+
 
 export function HomePage() {
 
