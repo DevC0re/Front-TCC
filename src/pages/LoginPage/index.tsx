@@ -26,8 +26,8 @@ export function LoginPage() {
   const [isLoading , setIsLoading] = useState(false);
 
   const [lForm, setLForm] = useState<LoginForm>({
-    email :' ',
-    password :' ',
+    email :'',
+    password :'',
 
   })
 
