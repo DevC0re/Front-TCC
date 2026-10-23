@@ -6,6 +6,8 @@ import logo from "../../assets/Logo.png";
 import { Heart, House, User } from "lucide-react";
 import { useState } from "react";
 import { ComingSoon } from "../../components/ComingSoon";
+import { useNavigate } from "react-router-dom";
+
 
 export function HomePage() {
 
@@ -15,6 +17,13 @@ export function HomePage() {
         hospital.name.toLowerCase().includes(search.toLowerCase()))
 
     const [isModalOpen , setIsModalOpen] = useState(false);
+
+    const navigate = useNavigate();
+
+    function handleLogout() {
+        localStorage.removeItem("token");
+        navigate("/")
+    }
 
     return (
         <>
@@ -56,7 +65,12 @@ export function HomePage() {
                             <Heart className={s.navIcon}/>
                         <span>Favoritos</span>
                         </button>
-
+                        <button 
+                        className={s.navButton} 
+                        onClick={handleLogout}
+                        >
+                            Sair
+                        </button>
                     </div>
 
                 </aside>

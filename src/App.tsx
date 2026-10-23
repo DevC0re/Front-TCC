@@ -14,13 +14,11 @@ function App() {
     
     <Route path="/" element={<LoginPage/>}/>
 
-    <Route path="/Home" 
-    element={
-   
-    <HomePage/>
-   
-    }
-    />
+    <Route element={<ProtectRoute/>}>
+    <Route path="/home" element={<HomePage/>}/> 
+  
+    </Route>
+    
     
     </Routes>
     </BrowserRouter>

@@ -4,6 +4,8 @@ import hospital from "../../assets/Hospital.jpg";
 import s from "./SignInPage.module.scss";
 import { useState, type FormEvent } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { createUser } from "../../service/userService";
+import axios from "axios";
 
 interface RegisterFormData {
   name: string;
@@ -22,6 +24,7 @@ export function RegisterPage() {
 
   const navigate = useNavigate()
 
+  const [isLoading, setIsloading] = useState(false)
 
   const [fdata, setFData] = useState<RegisterFormData>({
     name: '',
@@ -35,7 +38,7 @@ export function RegisterPage() {
 
   })
 
-  const handleSingIn = (event: FormEvent) => {
+  const handleSingIn = async (event: FormEvent) => {
     let hasError = false;
     event.preventDefault();
 
@@ -78,10 +81,10 @@ export function RegisterPage() {
       hasError = true
 
     } else {
-      if (fdata.password.length < 6) {
+      if (fdata.password.length < 8) {
 
         setEData((previous) => ({
-          ...previous, password: "Sua senha precisa ter no minimo 6 caracteres"
+          ...previous, password: "Sua senha precisa ter no minimo 8 caracteres"
         }))
       hasError = true
 
@@ -105,17 +108,40 @@ export function RegisterPage() {
 
       }
     }
+    if (hasError) {
+      return;
+  }
+  try{
+    setIsloading(true)
 
-    if (!hasError) {
-      
-    
-    const user = {
-      email: fdata.email,
-      password: fdata.password
-    }
-    localStorage.setItem("user",JSON.stringify(user))
+    await createUser({
+      name :fdata.name,
+      email:fdata.email,
+      password:fdata.password
+
+    })
     navigate("/")
+  }
+  catch(error){
+    if(axios.isAxiosError(error)){
 
+      if(error.response?.status===403){
+
+        setEData((previous)=>({
+          ...previous,
+          email:"Já existe uma conta com esse e-mail"
+
+          
+          
+        })
+      )
+      }
+    }
+    
+    return console.error(error);
+    
+  }finally{
+    setIsloading(false)
   }
   }
 
@@ -227,16 +253,20 @@ export function RegisterPage() {
               {eData.confirmPassword&& <span className={s.errorMensage}>{eData.confirmPassword} </span>}
 
           </div>
-          <Button type="submit">Criar nova conta</Button>
+          <Button 
+          type="submit" 
+          disabled={isLoading}>
+            {isLoading ? "Criando conta...": "Criar nova conta"}
+            </Button>
         </form>
 
         <div className={s.loginTxt}>
-          <p>
+          
             <div className={s.terms}>
               <span>Você já tem uma conta? </span>
               <Link to="/">Faça o Login</Link>
             </div>
-          </p>
+          
         </div>
 
         <div className={s.termsNotice}>
