@@ -1,9 +1,25 @@
 @use "../../style/utils/variables" as *;
 
-s.body{
-    background-color: $Sky-blue;
+.body{
+    background-color: $sky-blue;
 }
 
-s.main{
-    
+.hospitalCard{
+    background-color: white;
+    width: 60%;
+}
+.cardInformation{
+
+}
+.cardWrapper{
+
+}
+.informationsBox{
+
+}
+.agreementBox{
+
+}
+.specialtyBox{
+
 }
