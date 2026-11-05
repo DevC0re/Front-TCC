@@ -6,6 +6,7 @@ import saoLuiz from "../assets/Hospital-Sao-Luiz-Campinas-768x506.webp";
 import einstein from "../assets/gettyimages-459655244-612x612.jpg";
 
 interface Hospital {
+  id: number;
   image: string;
   name: string;
   adress: string;
@@ -17,6 +18,7 @@ interface Hospital {
 
 export const Hospitals: Hospital[] = [
   {
+    id: 1,
     image: grajau,
     name: "Hospital Geral do Grajaú",
     adress: "Rua Francisco Octavio Pacca",
@@ -27,6 +29,7 @@ export const Hospitals: Hospital[] = [
   },
 
   {
+    id:1,
     image: campoLimpo,
     name: "Hospital Municipal do Campo Limpo",
     adress: "Estrada do Campo Limpo",
@@ -37,6 +40,7 @@ export const Hospitals: Hospital[] = [
   },
 
   {
+    id:1,
     image: einstein,
     name: "Hospital Israelita Albert Einstein",
     adress: "Av. Albert Einstein",
@@ -48,6 +52,7 @@ export const Hospitals: Hospital[] = [
 ];
 export const nearbyHospitals: Hospital[] = [
   {
+    id:1,
     image: campoLimpo,
     name: "Hospital Municipal do Campo Limpo",
     adress: "Estrada do Campo Limpo",
@@ -58,6 +63,7 @@ export const nearbyHospitals: Hospital[] = [
   },
 
   {
+    id:1,
     image: regionalSul ,
     name: "Hospital Regional Sul",
     adress: "Rua General Roberto Alves",
@@ -68,6 +74,7 @@ export const nearbyHospitals: Hospital[] = [
   },
 
   {
+    id:1,
     image: santaCruz,
     name: "Hospital Santa Cruz",
     adress: "Rua Olegário Maciel",
