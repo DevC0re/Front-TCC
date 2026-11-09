@@ -1,7 +1,10 @@
 @use "../../style/utils/variables" as *;
 
 .body{
-    background-color: $sky-blue;
+  display: flex;
+  min-height: 100vh;
+  background-color: $sky-blue;
+  flex-direction: row-reverse;
 }
 
 .hospitalCard{
@@ -12,9 +15,12 @@
 
 }
 .cardWrapper{
-
+    
 }
 .informationsBox{
+    background-color: white;
+    height: 230px;
+    width: 800px;
 
 }
 .agreementBox{
