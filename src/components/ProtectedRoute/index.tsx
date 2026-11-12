@@ -9,6 +9,7 @@ export function ProtectRoute() {
     if (!token|| !isTokenValid(token)) {
         
         localStorage.removeItem("token")
+        localStorage.removeItem("userName")
 
         
         return <Navigate to="/" replace />
