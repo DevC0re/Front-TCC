@@ -2,79 +2,27 @@ import { Input } from "../../components/Input";
 import s from "./Home.module.scss";
 import { HospitalCard } from "../../components/HospitalCard";
 import { Hospitals, nearbyHospitals } from "../../data/Hospital";
-import logo from "../../assets/Logo.png";
-import { Heart, House, User } from "lucide-react";
 import { useState } from "react";
-import { ComingSoon } from "../../components/ComingSoon";
 import { useNavigate } from "react-router-dom";
+import { Navbar } from "../../components/Navbar";
 
 
 export function HomePage() {
+
+    const userName = localStorage.getItem("userName")?.trim() || "Usuário";
 
     const [search, setSearch] = useState("")
 
     const filteredHospitals = Hospitals.filter((hospital) =>
         hospital.name.toLowerCase().includes(search.toLowerCase()))
 
-    const [isModalOpen , setIsModalOpen] = useState(false);
-
     const navigate = useNavigate();
-
-    function handleLogout() {
-        localStorage.removeItem("token");
-        navigate("/")
-    }
 
     return (
         <>
-                <ComingSoon
-                isOpen={isModalOpen}
-                onClose={()=> setIsModalOpen(false)}
-                />
             <div className={s.body}>
 
-                <aside className={s.asSide}>
-                    <img src={logo} alt="Logo" />
-
-                    <div className={s.navLinks}>
-                        <button 
-                        className={s.navButton}
-                        onClick={()=>window.scrollTo({
-                            top: 0,
-                            behavior :"smooth"
-                        })}
-                        >
-                            <House className={s.navIcon} />
-                            <span>Home</span>
-                        </button>
-
-                        <button className={s.navButton}
-                        onClick={()=>setIsModalOpen(true)}
-                        >
-                            
-                            <User className={s.navIcon} />
-                        <span>User</span>
-                        
-                        </button>
-
-                        <button 
-                        className={s.navButton}
-                        onClick={()=>setIsModalOpen(true)}
-                        >
-
-                            <Heart className={s.navIcon}/>
-                        <span>Favoritos</span>
-                        </button>
-                        <button 
-                        className={s.navButton} 
-                        onClick={handleLogout}
-                        >
-                            Sair
-                        </button>
-                    </div>
-
-                </aside>
-
+               <Navbar/>
                 <main className={s.main}>
 
                     <div className={s.searchBar}>
@@ -91,7 +39,7 @@ export function HomePage() {
                     <div className={s.box}>
                         <div className={s.text}>
 
-                            <h1>Bem vindo, Nome</h1>
+                            <h1>Bem vindo, {userName}</h1>
                             <p>Encontre os melhores serviços da sua região</p>
 
                         </div>
@@ -104,9 +52,11 @@ export function HomePage() {
 
                                     filteredHospitals.map((hospital => (
                                         <HospitalCard
+                                        key={hospital.id}
+                                        onOpen={() => navigate(`/hospital/${hospital.id}`)}
                                             image={hospital.image}
                                             name={hospital.name}
-                                            adress={hospital.adress}
+                                            address={hospital.address}
                                             status={hospital.status}
                                             rating={hospital.rating}
                                             type={hospital.type}
@@ -136,9 +86,11 @@ export function HomePage() {
                             <div className={s.carousel}>
                                 {nearbyHospitals.map((hospital) => (
                                     <HospitalCard
+                                        key={hospital.id}
+                                        onOpen={() => navigate(`/hospital/${hospital.id}`)}
                                         image={hospital.image}
                                         name={hospital.name}
-                                        adress={hospital.adress}
+                                        address={hospital.address}
                                         status={hospital.status}
                                         rating={hospital.rating}
                                         type={hospital.type}
