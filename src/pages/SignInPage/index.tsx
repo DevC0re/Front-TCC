@@ -114,13 +114,15 @@ export function RegisterPage() {
   try{
     setIsloading(true)
 
-    await createUser({
-      name :fdata.name,
-      email:fdata.email,
-      password:fdata.password
+await createUser({
+  name: fdata.name,
+  email: fdata.email,
+  password: fdata.password
+})
 
-    })
-    navigate("/")
+sessionStorage.setItem("verificationEmail", fdata.email)
+
+navigate("/VerifyAccount")
   }
   catch(error){
     if(axios.isAxiosError(error)){
