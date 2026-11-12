@@ -18,7 +18,7 @@ export function ComingSoon({isOpen, onClose} : ModalCondition){
             className={s.modal}>
                 <h2>Em breve!</h2>
 
-                <p>Essa funcionalidade ainda está em desnvolvimento.</p>
+                <p>Essa funcionalidade ainda está em desenvolvimento.</p>
 
                 <button onClick={onClose}>OK</button>
             </div>
