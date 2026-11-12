@@ -3,9 +3,9 @@ import { Input } from "../../components/Input";
 import hospital from "../../assets/Hospital.jpg";
 import s from "./LoginPage.module.scss";
 import google from "../../assets/googleIcon.svg"
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import type { FormEvent } from "react";
-import { Link, Navigate, useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import {login} from "../../service/authService"
 import axios from "axios";
 
@@ -14,11 +14,6 @@ interface LoginForm {
   password:string;
 }
 
-interface LoginFormError{
-
-  email?:string
-  password?:string
-}
 
 export function LoginPage() {
 
@@ -31,17 +26,12 @@ export function LoginPage() {
 
   })
 
-  const [eForm, setEForm] = useState<LoginFormError>({
-
-  })
-
   const [error, setError] = useState("")
   const navigate = useNavigate()
   const handleLogin = async (event: FormEvent) => {
 
     event.preventDefault();
 
-    const userData = localStorage.getItem("user")
 
     if (!lForm.email || !lForm.password) {
 
@@ -60,8 +50,9 @@ export function LoginPage() {
         senha: lForm.password,
   
       })
-      const token = response.data;
+      const { token, name } = response.data;
       localStorage.setItem("token", token);
+      localStorage.setItem("userName", name?.trim() || "Usuário");
       navigate("/home")
 
     } catch (error) {

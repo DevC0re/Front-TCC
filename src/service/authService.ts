@@ -5,6 +5,11 @@ interface loginRequest{
     senha: string;
 } 
 
+interface LoginResponse {
+    token: string;
+    name: string;
+}
+
 export function login(data:loginRequest) {
-    return api.post<string>("/login", data)
+    return api.post<LoginResponse>("/login", data)
 }
