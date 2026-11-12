@@ -13,13 +13,15 @@ function App() {
     
     <Route path="/Signup" element= {<RegisterPage/>}/>
     
-    <Route path="/" element={<HospitalProfilePage/>}/>
+    <Route path="/" element={<LoginPage/>}/>
+<Route element={<ProtectRoute />}>
+  <Route path="/home" element={<HomePage />} />
 
-    <Route element={<ProtectRoute/>}>
-    <Route path="/home" element={<HomePage/>}/> 
-  
-    </Route>
-    
+  <Route
+    path="/hospital/:id"
+    element={<HospitalProfilePage />}
+  />
+</Route> 
     
     </Routes>
     </BrowserRouter>
