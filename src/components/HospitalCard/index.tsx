@@ -13,8 +13,9 @@ interface Data {
     favorite: boolean;
     variant?: "default" | "profile";
     waitingTime?: string;
+    onReviewClick?: () => void;
 }
-export function HospitalCard({ onOpen, waitingTime, image, name, address, status, rating, type, favorite, variant }: Data) {
+export function HospitalCard({ onReviewClick, onOpen, waitingTime, image, name, address, status, rating, type, favorite, variant }: Data) {
 
     const [favoritoAtual, setFavoritoAtual] = useState(favorite);
 
@@ -77,7 +78,12 @@ export function HospitalCard({ onOpen, waitingTime, image, name, address, status
                 <div className={s.actions}>
                     <button>Ligar</button>
                     <button>Rota</button>
-                    <button>Avaliar</button>
+                    <button
+                        type="button"
+                        onClick={onReviewClick}
+                    >
+                        Avaliar
+                    </button>
                 </div>
             )}
         </div>
