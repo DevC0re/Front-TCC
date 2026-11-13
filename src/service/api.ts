@@ -1,7 +1,7 @@
 import axios from 'axios'
 
 export const api = axios.create({
-    baseURL: "medupp-dbbwg6bqcqbya7db.southafricanorth-01.azurewebsites.net"
+    baseURL: "https://medupp-dbbwg6bqcqbya7db.southafricanorth-01.azurewebsites.net"
 });
 
 api.interceptors.request.use((config)=> {
