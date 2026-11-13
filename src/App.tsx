@@ -22,12 +22,12 @@ function App() {
               path="/hospital/:id"
               element={<HospitalProfilePage />}
             />
+          </Route>
+
             <Route
               path="/VerifyAccount"
               element={<VerifyCodePage />}
             />
-          </Route>
-
         </Routes>
       </BrowserRouter>
 
