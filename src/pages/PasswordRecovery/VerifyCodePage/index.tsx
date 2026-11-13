@@ -33,7 +33,7 @@ async function handleVerify() {
     setLoading(true);
 
     await axios.post(
-      "https://medupp-dbbwg6bqcqbya7db.southafricanorth-01.azurewebsites.net",
+      "https://medupp-dbbwg6bqcqbya7db.southafricanorth-01.azurewebsites.net/api/auth/confirmar",
       {
         email,
         codigo,
@@ -41,10 +41,24 @@ async function handleVerify() {
     );
 
     sessionStorage.removeItem("verificationEmail");
+
     navigate("/");
   } catch (error) {
-    console.error(error);
-    setError("Código inválido ou expirado.");
+    if (axios.isAxiosError(error)) {
+      console.log("STATUS:", error.response?.status);
+      console.log("RESPOSTA:", error.response?.data);
+
+      if (error.response?.status === 422) {
+        setError("Código inválido ou expirado.");
+      } else if (error.response?.status === 400) {
+        setError("Código ou e-mail inválido.");
+      } else {
+        setError("Não foi possível verificar a conta.");
+      }
+    } else {
+      console.error(error);
+      setError("Erro inesperado.");
+    }
   } finally {
     setLoading(false);
   }
@@ -96,11 +110,9 @@ async function handleVerify() {
 
         <div className={s.button}>
           <Button
-            children={
-              loading ? "Verificando..." : "Verificar conta"
-            }
-            onClick={handleVerify}
-          />
+          children={ loading ? "Verificando..." : "Verificar conta"}
+          onClick={handleVerify}
+         />
         </div>
       </div>
     </div>

@@ -124,27 +124,26 @@ sessionStorage.setItem("verificationEmail", fdata.email)
 
 navigate("/VerifyAccount")
   }
-  catch(error){
-    if(axios.isAxiosError(error)){
+  catch (error) {
+  if (axios.isAxiosError(error)) {
+    console.log("STATUS:", error.response?.status);
+    console.log("RESPOSTA:", error.response?.data);
+    console.log("URL:", error.config?.url);
 
-      if(error.response?.status===403){
+    if (error.response?.status === 409) {
+      setEData((previous) => ({
+        ...previous,
+        email: "Já existe uma conta com esse e-mail",
+      }));
 
-        setEData((previous)=>({
-          ...previous,
-          email:"Já existe uma conta com esse e-mail"
-
-          
-          
-        })
-      )
-      }
+      return;
     }
-    
-    return console.error(error);
-    
-  }finally{
-    setIsloading(false)
+
+    return;
   }
+
+  console.error(error);
+}
   }
 
   return (
