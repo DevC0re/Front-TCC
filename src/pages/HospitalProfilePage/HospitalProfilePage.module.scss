@@ -26,9 +26,7 @@
   gap: 32px;
 }
 
-/* =========================
-   SEGUNDA LINHA
-========================= */
+/* SEGUNDA LINHA */
 
 .cardWrapper {
   width: 100%;
@@ -39,9 +37,7 @@
   gap: 40px;
 }
 
-/* =========================
-   INFORMAÇÕES
-========================= */
+/* INFORMAÇÕES */
 
 .informationsBox {
   min-height: 247px;
@@ -91,9 +87,7 @@
   }
 }
 
-/* =========================
-   CONVÊNIOS
-========================= */
+/* CONVÊNIOS */
 
 .agreementBox {
   min-height: 247px;
@@ -135,9 +129,7 @@
   }
 }
 
-/* =========================
-   ESPECIALIDADES
-========================= */
+/* ESPECIALIDADES */
 
 .specialtyBox {
   width: 100%;
@@ -180,9 +172,7 @@
   }
 }
 
-/* ==========================================
-   DESKTOP MENOR
-========================================== */
+/* DESKTOP MENOR */
 
 @media (max-width: 1200px) {
 
@@ -196,9 +186,7 @@
   }
 }
 
-/* ==========================================
-   TABLET
-========================================== */
+/* TABLET */
 
 @media (max-width: 900px) {
   .main {
@@ -215,9 +203,7 @@
   }
 }
 
-/* ==========================================
-   MOBILE
-========================================== */
+/* MOBILE*/
 
 @media (max-width: 1050px) {
   .main {
@@ -276,13 +262,15 @@
   gap: 24px;
 }
 
-.reviewForm,
 .reviewsList {
   width: 100%;
   background: #ffffff;
   border-radius: 18px;
   padding: 28px;
   box-sizing: border-box;
+  max-height: 420px;
+  overflow-y: auto;
+  
 
   h1 {
     margin: 0;
