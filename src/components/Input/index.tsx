@@ -6,7 +6,7 @@ import s from "./input.module.scss";
 interface InputProps extends InputHTMLAttributes <HTMLInputElement> {
 
     variant?:"default" |"password"|"search"
-    type?:"email"|"text"|"password"
+    type?:"email"|"text"|"password"|"phone"
     error?: boolean
 } 
 
