@@ -2,6 +2,16 @@ import { Button } from "../../../components/Button"
 import { Input } from "../../../components/Input"
 import s from "./VerifyCodePage.module.scss"
 
+interface password{
+    password: string;
+    confirmPassword: string;
+}
+
+interface errorPassword{
+    password?: string;
+    confirmpassword?:string;
+}
+
 export function VerifyCodePage() {
 
     return (
@@ -16,9 +26,18 @@ export function VerifyCodePage() {
                    
 
                     <label htmlFor="">Senha</label>
-                    <Input className={s.input} placeholder="*********" variant="password"/>
+                    <Input 
+                    className={s.input} 
+                    placeholder="*********" 
+                    variant="password"
+                    />
+
                     <label htmlFor="">Confirme sua senha</label>
-                    <Input className={s.input} placeholder="*********" variant="password"/>
+                    <Input 
+                    className={s.input}
+                    placeholder="*********" 
+                    variant="password"
+                    />
                     
                    
             
@@ -26,8 +45,9 @@ export function VerifyCodePage() {
                 
                 <div className={s.button}>
                     <Button
-                        children="Verifique a conta"
-                    />
+                        children="Verifique a conta" 
+                        type="submit"
+                        />
                 </div>
 
             </div>
