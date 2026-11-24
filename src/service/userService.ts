@@ -1,31 +1,53 @@
 import { api } from "./api";
 
-interface userRequest {
-    name: string;
-    email: string;
-    password: string;
-}
-interface userResponse {
-    name: string;
-    email: string;
+export interface Convenio {
+  id: string;
+  name: string;
+  cnpj: string;
+  hospitaisAceitos: string[];
 }
 
-
-export function createUser(data: userRequest) {
-    return api.post("/usuario", data);
-}
-export function getUser() {
-    return api.get<userResponse>("/usuario");
-}
-
-export function getUserById(id: string) {
-    return api.get<userResponse>(`/usuario/${id}`);
+export interface UserProfile {
+  name: string;
+  email: string;
+  phone: string;
+  birthDate: string;
+  photo?: string;
+  convenio?: Convenio | null;
 }
 
-export function updateUser(id: string, data: userRequest) {
-    return api.put<userResponse>(`/usuario/${id}`, data);
+export interface UpdateUserProfile {
+  name: string;
+  email: string;
+  phone: string;
+  birthDate: string;
 }
 
-export function deleteUser(id: string) {
-    return api.delete<string>(`/usuarios/${id}`);
+interface CreateUserRequest {
+  name: string;
+  email: string;
+  cpf?: string;
+  password: string;
+}
+
+export function createUser(data: CreateUserRequest) {
+  return api.post("/usuario", data);
+}
+
+export function getCurrentUser() {
+  return api.get<UserProfile>("/usuario/me");
+}
+
+export function updateCurrentUser(data: UpdateUserProfile) {
+  return api.put<UserProfile>("/usuario/me", data);
+}
+
+export function getConvenios() {
+  return api.get<Convenio[]>("/convenio");
+}
+
+export function updateCurrentUserConvenio(convenioId: string) {
+  return api.put<UserProfile>(
+    `/usuario/me/convenio/${convenioId}`
+  );
 }
