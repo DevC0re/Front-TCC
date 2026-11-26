@@ -29,17 +29,6 @@ interface CreateUserRequest {
   cpf?: string;
   password: string;
 }
-interface Address {
-  road: string;
-  neighborhood: string;
-  cep: string;
-  number: string;
-  city: string;
-  state: string;
-  latitude: number | null;
-  longitude: number | null;
-}
-
 
 export function createUser(data: CreateUserRequest) {
   return api.post("/usuario", data);

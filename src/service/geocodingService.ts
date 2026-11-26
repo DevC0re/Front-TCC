@@ -22,7 +22,7 @@ interface BrasilApiResponse {
     };
   };
 }
-export async function searchAddressByCep(cep: string) {
+export async function searchAddressByCep(cep: string, signal?: AbortSignal) {
   const cleanCep = cep.replace(/\D/g, "");
 
   if (cleanCep.length !== 8) {
@@ -31,7 +31,7 @@ export async function searchAddressByCep(cep: string) {
 
   const response = await axios.get<ViaCepResponse>(
     `https://viacep.com.br/ws/${cleanCep}/json/`,
-    { timeout: 8000 }
+    { timeout: 8000, signal }
   );
 
   if (response.data.erro === true ||
@@ -48,7 +48,8 @@ export async function searchAddressByCep(cep: string) {
   };
 }
 export async function searchCoordinatesByCep(
-  cep: string
+  cep: string,
+  signal?: AbortSignal,
 ): Promise<Coordinates | null> {
   const cleanCep = cep.replace(/\D/g, "");
 
@@ -58,7 +59,7 @@ export async function searchCoordinatesByCep(
 
   const response = await axios.get<BrasilApiResponse>(
     `https://brasilapi.com.br/api/cep/v2/${cleanCep}`,
-    { timeout: 8000 }
+    { timeout: 8000, signal }
   );
 
   const coordinates = response.data.location?.coordinates;

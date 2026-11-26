@@ -26,12 +26,6 @@ export function getAddresses() {
   );
 }
 
-export function getAddressById(id: string) {
-  return api.get<AddressResponse>(
-    `/usuario/me/enderecos/${id}`
-  );
-}
-
 export function createAddress(data: AddressRequest) {
   return api.post<AddressResponse>(
     "/usuario/me/enderecos",

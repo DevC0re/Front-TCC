@@ -1,7 +1,7 @@
 import s from "./UserProfilePage.module.scss";
 import { Navbar } from "../../components/Navbar";
 import { Input } from "../../components/Input";
-import { useEffect, useState, type ChangeEvent, type FormEvent } from "react";
+import { useEffect, useRef, useState, type ChangeEvent, type FormEvent } from "react";
 import { Button } from "../../components/Button";
 
 import {
@@ -11,10 +11,11 @@ import {
   updateCurrentUserConvenio,
   type Convenio,
   type UserProfile,
+  type UpdateUserProfile,
 } from "../../service/userService";
-import { AddressCard } from "../../components/AdressCard";
+import { AddressCard } from "../../components/AddressCard";
 
-import { AddressMap } from "../../components/AdressMap";
+import { AddressMap } from "../../components/AddressMap";
 
 import {
   getAddresses,
@@ -24,7 +25,7 @@ import {
   setPrimaryAddress,
   type AddressRequest,
   type AddressResponse,
-} from "../../service/adressService";
+} from "../../service/addressService";
 
 import {
   searchAddressByCep,
@@ -45,139 +46,210 @@ const emptyAddress: AddressRequest = {
   longitude: null,
 };
 
+const cepPattern = /^\d{5}-?\d{3}$/;
+const validStates = new Set(
+  "AC AL AP AM BA CE DF ES GO MA MT MS MG PA PB PR PE PI RJ RN RS RO RR SC SP SE TO".split(" "),
+);
+
 export function UserProfilePage() {
-  const [userData, setUserData] = useState<UserProfile>({
-    name: "",
-    email: "",
-    phone: "",
-    birthDate: "",
-    convenio: null,
-  });
-
-  const [mapFocus, setMapFocus] = useState<Coordinates | null>(null);
-
-  const [locationMessage, setLocationMessage] = useState("");
-
-  const [searchingCep, setSearchingCep] = useState(false);
-
-  const [addresses, setAddresses] = useState<AddressResponse[]>([]);
-
-  const [addressData, setAddressData] = useState<AddressRequest>(emptyAddress);
-
-  const [editingAddressId, setEditingAddressId] = useState<string | null>(null);
-
-  const [isEditingAddress, setIsEditingAddress] = useState(false);
-
-  const [loadingAddresses, setLoadingAddresses] = useState(true);
-
-  const [savingAddress, setSavingAddress] = useState(false);
-
-  const [addressError, setAddressError] = useState("");
+  const [userData, setUserData] = useState<UserProfile | null>(null);
+  const [profileDraft, setProfileDraft] = useState<UpdateUserProfile | null>(null);
+  const [loadingProfile, setLoadingProfile] = useState(true);
+  const [profileLoadError, setProfileLoadError] = useState("");
+  const [profileError, setProfileError] = useState("");
 
   const [convenios, setConvenios] = useState<Convenio[]>([]);
-
+  const [loadingConvenios, setLoadingConvenios] = useState(true);
+  const [convenioLoadError, setConvenioLoadError] = useState("");
+  const [convenioError, setConvenioError] = useState("");
   const [selectedConvenio, setSelectedConvenio] = useState("");
-
-  const [isEditing, setIsEditing] = useState(false);
-
   const [isEditingConvenio, setIsEditingConvenio] = useState(false);
 
-  const [loading, setLoading] = useState(true);
+  // As duas operações retornam o perfil completo.
+  const userSaveLock = useRef(false);
+  const [savingUser, setSavingUser] = useState<"profile" | "convenio" | null>(null);
 
-  // CARREGA O USUÁRIO E OS CONVÊNIOS
-  useEffect(() => {
-    async function loadProfile() {
-      try {
-        const [userResponse, convenioResponse] = await Promise.all([
-          getCurrentUser(),
-          getConvenios(),
-        ]);
+  const [addresses, setAddresses] = useState<AddressResponse[]>([]);
+  const [addressData, setAddressData] = useState<AddressRequest>(emptyAddress);
+  const [editingAddressId, setEditingAddressId] = useState<string | null>(null);
+  const [isEditingAddress, setIsEditingAddress] = useState(false);
+  const [loadingAddresses, setLoadingAddresses] = useState(true);
+  const [addressListError, setAddressListError] = useState("");
+  const [addressError, setAddressError] = useState("");
 
-        setUserData(userResponse.data);
-
-        setConvenios(convenioResponse.data);
-
-        if (userResponse.data.convenio) {
-          setSelectedConvenio(userResponse.data.convenio.id);
-        }
-      } catch (error) {
-        console.error("Erro ao carregar perfil:", error);
-      } finally {
-        setLoading(false);
-      }
-    }
-
-    loadProfile();
-  }, []);
+  const [mapFocus, setMapFocus] = useState<Coordinates | null>(null);
+  const cepRequest = useRef<AbortController | null>(null);
+  const addressSaveLock = useRef(false);
+  const [searchingCep, setSearchingCep] = useState(false);
+  const [savingAddress, setSavingAddress] = useState(false);
+  const addressBusy = searchingCep || savingAddress;
 
   useEffect(() => {
-    async function loadAddresses() {
-      try {
-        const response = await getAddresses();
+    let active = true;
 
-        setAddresses(response.data);
-      } catch (error) {
-        setAddressError("Não foi possível carregar os endereços.");
+    getCurrentUser()
+      .then(({ data }) => {
+        if (active) setUserData(data);
+      })
+      .catch(() => {
+        if (active) setProfileLoadError("Não foi possível carregar seu perfil.");
+      })
+      .finally(() => {
+        if (active) setLoadingProfile(false);
+      });
 
-        console.error(error);
-      } finally {
-        setLoadingAddresses(false);
-      }
-    }
+    getConvenios()
+      .then(({ data }) => {
+        if (active) setConvenios(data);
+      })
+      .catch(() => {
+        if (active) setConvenioLoadError("Não foi possível carregar a lista de convênios.");
+      })
+      .finally(() => {
+        if (active) setLoadingConvenios(false);
+      });
 
-    loadAddresses();
+    getAddresses()
+      .then(({ data }) => {
+        if (active) setAddresses(data);
+      })
+      .catch(() => {
+        if (active) setAddressListError("Não foi possível carregar os endereços.");
+      })
+      .finally(() => {
+        if (active) setLoadingAddresses(false);
+      });
+
+    return () => {
+      active = false;
+      cepRequest.current?.abort();
+    };
   }, []);
+
+  function startProfileEdit() {
+    if (!userData || userSaveLock.current) return;
+
+    setProfileError("");
+    setProfileDraft({
+      name: userData.name ?? "",
+      email: userData.email ?? "",
+      phone: userData.phone ?? "",
+      birthDate: userData.birthDate?.slice(0, 10) ?? "",
+    });
+  }
 
   function handleChange(event: ChangeEvent<HTMLInputElement>) {
-    const { id, value } = event.target;
-
-    setUserData((previous) => ({
-      ...previous,
-      [id]: value,
-    }));
+    const { id, value } = event.currentTarget;
+    setProfileDraft((previous) => previous && { ...previous, [id]: value });
   }
 
   async function handleUpdateProfile(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
+    if (!profileDraft || userSaveLock.current) return;
 
-    try {
-      const response = await updateCurrentUser({
-        name: userData.name,
-        email: userData.email,
-        phone: userData.phone,
-        birthDate: userData.birthDate,
-      });
+    const data = {
+      name: profileDraft.name.trim(),
+      email: profileDraft.email.trim(),
+      phone: profileDraft.phone.trim(),
+      birthDate: profileDraft.birthDate,
+    };
+    const phoneDigits = data.phone.replace(/\D/g, "");
+    const today = new Date();
+    const birthDate = new Date(data.birthDate + "T00:00:00");
+    const [year, month, day] = data.birthDate.split("-").map(Number);
 
-      setUserData(response.data);
-
-      setIsEditing(false);
-    } catch (error) {
-      console.error("Erro ao atualizar usuário:", error);
+    if (!data.name || !/\p{L}/u.test(data.name)) {
+      setProfileError("Informe um nome válido.");
+      return;
     }
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(data.email)) {
+      setProfileError("Informe um e-mail válido.");
+      return;
+    }
+    if (
+      !/^\+?[\d() .-]+$/.test(data.phone) || !/^(?:55)?\d{10,11}$/.test(phoneDigits) ||
+      (data.phone.startsWith("+") && !/^55\d{10,11}$/.test(phoneDigits))
+    ) {
+      setProfileError("Informe um telefone com DDD, com 10 ou 11 dígitos, e código +55 opcional.");
+      return;
+    }
+    if (
+      !/^\d{4}-\d{2}-\d{2}$/.test(data.birthDate) ||
+      year < 1 ||
+      birthDate.getFullYear() !== year ||
+      birthDate.getMonth() + 1 !== month ||
+      birthDate.getDate() !== day ||
+      birthDate > today
+    ) {
+      setProfileError("Informe uma data de nascimento válida, sem usar uma data futura.");
+      return;
+    }
+
+    userSaveLock.current = true;
+    setSavingUser("profile");
+    setProfileError("");
+    try {
+      const { data: updated } = await updateCurrentUser(data);
+      setUserData(updated);
+      setProfileDraft(null);
+    } catch {
+      setProfileError("Não foi possível salvar seu perfil. Tente novamente.");
+    } finally {
+      userSaveLock.current = false;
+      setSavingUser(null);
+    }
+  }
+
+  function resetConvenioSelection() {
+    setSelectedConvenio(userData?.convenio?.id ?? "");
+    setConvenioError("");
   }
 
   async function handleUpdateConvenio() {
-    if (!selectedConvenio) return;
+    if (userSaveLock.current) return;
+    if (!convenios.some(({ id }) => id === selectedConvenio && id)) {
+      setConvenioError("Selecione um convênio da lista.");
+      return;
+    }
 
+    userSaveLock.current = true;
+    setSavingUser("convenio");
+    setConvenioError("");
     try {
-      const response = await updateCurrentUserConvenio(selectedConvenio);
-
-      setUserData(response.data);
-
+      const { data } = await updateCurrentUserConvenio(selectedConvenio);
+      setUserData(data);
       setIsEditingConvenio(false);
-    } catch (error) {
-      console.error("Erro ao atualizar convênio:", error);
+    } catch {
+      setConvenioError("Não foi possível atualizar o convênio. Tente novamente.");
+    } finally {
+      userSaveLock.current = false;
+      setSavingUser(null);
     }
   }
 
-  function handleNewAddress() {
-    setAddressData({ ...emptyAddress });
+  function resetAddressForm() {
+    setAddressData(emptyAddress);
     setEditingAddressId(null);
+    setIsEditingAddress(false);
+    setMapFocus(null);
     setAddressError("");
+  }
+
+  function handleNewAddress() {
+    if (addressSaveLock.current || cepRequest.current) return;
+    resetAddressForm();
     setIsEditingAddress(true);
   }
 
   function handleEditAddress(address: AddressResponse) {
+    if (addressSaveLock.current || cepRequest.current) return;
+
+    const { latitude, longitude } = address;
+    const focus = latitude != null && longitude != null &&
+      Math.abs(latitude) <= 90 && Math.abs(longitude) <= 180
+      ? { latitude, longitude }
+      : null;
+
     setAddressData({
       cep: address.cep,
       logradouro: address.logradouro,
@@ -187,177 +259,179 @@ export function UserProfilePage() {
       estado: address.estado,
       complemento: address.complemento,
       apelido: address.apelido,
-      latitude: address.latitude,
-      longitude: address.longitude,
+      latitude: focus?.latitude ?? null,
+      longitude: focus?.longitude ?? null,
     });
-
+    setMapFocus(focus);
     setEditingAddressId(address.id);
     setAddressError("");
     setIsEditingAddress(true);
   }
 
   function handleAddressChange(event: ChangeEvent<HTMLInputElement>) {
-    const { id, value } = event.target;
+    if (addressSaveLock.current || cepRequest.current) return;
 
-    const changesLocation = [
-      "cep",
-      "logradouro",
-      "numero",
-      "bairro",
-      "cidade",
-      "estado",
-    ].includes(id);
+    const { id, value } = event.currentTarget;
+    const changesLocation = ["cep", "logradouro", "numero", "bairro", "cidade", "estado"].includes(id);
 
     setAddressData((previous) => ({
       ...previous,
       [id]: value,
-      ...(changesLocation
-        ? {
-            latitude: null,
-            longitude: null,
-          }
-        : {}),
+      ...(changesLocation ? { latitude: null, longitude: null } : {}),
     }));
+    if (changesLocation) setMapFocus(null);
   }
 
-  function handleCancelAddress() {
-    setAddressData({ ...emptyAddress });
-    setEditingAddressId(null);
-    setIsEditingAddress(false);
+  async function saveAddressOperation(operation: () => Promise<unknown>, errorMessage: string) {
+    if (addressSaveLock.current || cepRequest.current) return;
+
+    addressSaveLock.current = true;
+    setSavingAddress(true);
     setAddressError("");
+
+    try {
+      await operation();
+
+      try {
+        const { data } = await getAddresses();
+        setAddresses(data);
+        setAddressListError("");
+      } catch {
+        setAddressListError("Alteração concluída, mas não foi possível atualizar a lista de endereços. Recarregue a página.");
+      }
+    } catch {
+      setAddressError(errorMessage);
+    } finally {
+      addressSaveLock.current = false;
+      setSavingAddress(false);
+    }
   }
 
   async function handleAddressSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
+    if (addressSaveLock.current || cepRequest.current) return;
 
-    if (savingAddress) return;
-
-    setSavingAddress(true);
-    setAddressError("");
-
+    const cep = addressData.cep.trim();
     const data: AddressRequest = {
       ...addressData,
+      cep: cep.replace("-", ""),
+      logradouro: addressData.logradouro.trim(),
+      numero: addressData.numero.trim(),
+      bairro: addressData.bairro.trim(),
+      cidade: addressData.cidade.trim(),
       estado: addressData.estado.trim().toUpperCase(),
-      cep: addressData.cep.replace(/\D/g, ""),
     };
 
-    try {
-      if (editingAddressId) {
-        await updateAddress(editingAddressId, data);
-      } else {
-        await createAddress(data);
-      }
-    } catch (error) {
-      setAddressError("Não foi possível salvar o endereço.");
-
-      console.error(error);
-      setSavingAddress(false);
+    if (!cepPattern.test(cep)) {
+      setAddressError("Informe um CEP com oito dígitos.");
+      return;
+    }
+    if (!data.logradouro || !data.numero || !data.bairro || !data.cidade) {
+      setAddressError("Preencha logradouro, número, bairro e cidade.");
+      return;
+    }
+    if (
+      data.logradouro.length > 180 || data.numero.length > 20 ||
+      data.bairro.length > 100 || data.cidade.length > 100 ||
+      (data.apelido?.length ?? 0) > 60 || (data.complemento?.length ?? 0) > 150
+    ) {
+      setAddressError("Reduza o tamanho dos campos de endereço antes de salvar.");
+      return;
+    }
+    if (!validStates.has(data.estado)) {
+      setAddressError("Informe uma sigla de estado válida.");
       return;
     }
 
-    handleCancelAddress();
+    await saveAddressOperation(async () => {
+      const { data: saved } = editingAddressId
+        ? await updateAddress(editingAddressId, data)
+        : await createAddress(data);
 
-    try {
-      const response = await getAddresses();
-
-      setAddresses(response.data);
-    } catch (error) {
-      setAddressError(
-        "Endereço salvo, mas não foi possível atualizar a lista.",
-      );
-
-      console.error(error);
-    } finally {
-      setSavingAddress(false);
-    }
+      if (saved?.id) {
+        setAddresses((previous) => editingAddressId
+          ? previous.map((address) => address.id === editingAddressId ? saved : address)
+          : [...previous, saved]);
+      }
+      resetAddressForm();
+    }, "Não foi possível salvar o endereço. Tente novamente.");
   }
 
   async function handleDeleteAddress(id: string) {
-    if (savingAddress) return;
+    if (addressSaveLock.current || cepRequest.current) return;
+    if (!window.confirm("Deseja realmente excluir este endereço?")) return;
 
-    const confirmed = window.confirm("Deseja realmente excluir este endereço?");
-
-    if (!confirmed) return;
-
-    setSavingAddress(true);
-    setAddressError("");
-
-    try {
+    await saveAddressOperation(async () => {
       await deleteAddress(id);
-
-      const response = await getAddresses();
-
-      setAddresses(response.data);
-
-      if (editingAddressId === id) {
-        handleCancelAddress();
-      }
-    } catch (error) {
-      setAddressError(
-        "Não foi possível concluir a operação. Recarregue a lista antes de tentar novamente.",
-      );
-
-      console.error(error);
-    } finally {
-      setSavingAddress(false);
-    }
+      setAddresses((previous) => previous.filter((address) => address.id !== id));
+      if (editingAddressId === id) resetAddressForm();
+    }, "Não foi possível excluir o endereço. Confira a lista antes de tentar novamente.");
   }
 
   async function handleSetPrimaryAddress(id: string) {
-    if (savingAddress) return;
+    await saveAddressOperation(async () => {
+      await setPrimaryAddress(id);
+      setAddresses((previous) => previous.map((address) => ({
+        ...address,
+        principal: address.id === id,
+      })));
+    }, "Não foi possível definir o endereço principal.");
+  }
 
-    setSavingAddress(true);
+  async function handleSearchCep() {
+    if (cepRequest.current || addressSaveLock.current) return;
+
+    const cep = addressData.cep.trim();
+    if (!cepPattern.test(cep)) {
+      setAddressError("Informe um CEP com oito dígitos.");
+      return;
+    }
+
+    const request = new AbortController();
+    cepRequest.current = request;
+    setSearchingCep(true);
     setAddressError("");
 
     try {
-      await setPrimaryAddress(id);
+      const result = await searchAddressByCep(cep, request.signal);
+      if (request.signal.aborted) return;
 
-      const response = await getAddresses();
+      setAddressData((previous) => {
+        const { cep, logradouro, bairro, cidade, estado } = previous;
+        const sameLocation = cep.replace("-", "") === result.cep.replace("-", "") &&
+          logradouro === result.logradouro && bairro === result.bairro &&
+          cidade === result.cidade && estado === result.estado;
 
-      setAddresses(response.data);
-    } catch (error) {
-      setAddressError("Não foi possível atualizar o endereço principal.");
+        return {
+          ...previous,
+          ...result,
+          latitude: sameLocation ? previous.latitude : null,
+          longitude: sameLocation ? previous.longitude : null,
+        };
+      });
 
-      console.error(error);
+      const coordinates = await searchCoordinatesByCep(result.cep, request.signal)
+        .catch(() => null);
+      if (request.signal.aborted) return;
+
+      setMapFocus(coordinates);
+      if (!coordinates) {
+        setAddressError("Não foi possível centralizar o mapa pelo CEP. Você pode marcar a localização no mapa.");
+      }
+    } catch {
+      if (!request.signal.aborted) {
+        setAddressError("Não foi possível localizar o CEP. Você pode preencher o endereço manualmente.");
+      }
     } finally {
-      setSavingAddress(false);
+      if (!request.signal.aborted) {
+        cepRequest.current = null;
+        setSearchingCep(false);
+      }
     }
   }
 
-async function handleSearchCep() {
-  if (searchingCep || savingAddress) return;
-
-  setSearchingCep(true);
-  setAddressError("");
-  setMapFocus(null);
-
-  try {
-    const result = await searchAddressByCep(
-      addressData.cep
-    );
-
-    setAddressData(previous => ({
-      ...previous,
-      ...result,
-      latitude: null,
-      longitude: null,
-    }));
-
-    const coordinates = await searchCoordinatesByCep(
-      result.cep
-    ).catch(() => null);
-
-    setMapFocus(coordinates);
-
-  } catch {
-    setAddressError("Não foi possível localizar o CEP.");
-  } finally {
-    setSearchingCep(false);
-  }
-}
-
   function handleLocationSelect(latitude: number, longitude: number) {
-    if (savingAddress || searchingCep) return;
+    if (addressSaveLock.current || cepRequest.current) return;
 
     setAddressData((previous) => ({
       ...previous,
@@ -366,287 +440,284 @@ async function handleSearchCep() {
     }));
   }
 
-  if (loading) {
-    return <p>Carregando perfil...</p>;
-  }
-
   return (
-    <>
-      <div className={s.body}>
-        <Navbar />
+    <div className={s.body}>
+      <Navbar />
 
-        <div className={s.main}>
-          <h1>Perfil de usuário</h1>
+      <main className={s.main}>
+        <h1>Perfil de usuário</h1>
 
-          <p>Gerencie suas informações pessoais, endereços e plano de saúde</p>
+        <p>Gerencie suas informações pessoais, endereços e plano de saúde</p>
 
-          {/* PERFIL */}
+        {/* PERFIL */}
 
+        {loadingProfile && <p role="status">Carregando perfil...</p>}
+        {profileLoadError && <p className={s.formError} role="alert">{profileLoadError}</p>}
+        {userData && (
           <div className={s.userCard}>
-            <img src={userData.photo ?? ""} alt="Foto do usuário" />
+            {userData.photo?.trim() && (
+              <img src={userData.photo} alt="Foto do usuário" />
+            )}
 
             <div className={s.userInfos}>
               <h1>{userData.name || "Usuário"}</h1>
-
               <p>{userData.email}</p>
             </div>
 
-            {!isEditing && (
-              <Button type="button" onClick={() => setIsEditing(true)}>
+            {!profileDraft && (
+              <Button type="button" onClick={startProfileEdit} disabled={savingUser !== null}>
                 Editar perfil
               </Button>
             )}
           </div>
+        )}
 
-          {/* EDIÇÃO DO PERFIL */}
+        {/* EDIÇÃO DO PERFIL */}
 
-          {isEditing && (
-            <form onSubmit={handleUpdateProfile} className={s.editInfo}>
-              <h1>Editar informações pessoais</h1>
+        {profileDraft && (
+          <form onSubmit={handleUpdateProfile} className={s.editInfo} noValidate>
+            <h1>Editar informações pessoais</h1>
 
-              <p>Altere seus dados e salve quando terminar.</p>
+            <p>Altere seus dados e salve quando terminar.</p>
 
-              <div className={s.inputWrapper}>
+            {profileError && <p className={s.formError} role="alert">{profileError}</p>}
+
+            <fieldset className={s.inputWrapper} disabled={savingUser !== null}>
+              <Input
+                type="text"
+                id="name"
+                placeholder="Nome completo"
+                value={profileDraft.name}
+                onChange={handleChange}
+              />
+
+              <Input
+                type="email"
+                id="email"
+                placeholder="E-mail"
+                value={profileDraft.email}
+                onChange={handleChange}
+              />
+
+              <Input
+                type="tel"
+                id="phone"
+                placeholder="Telefone"
+                value={profileDraft.phone}
+                onChange={handleChange}
+              />
+
+              <Input
+                type="date"
+                id="birthDate"
+                value={profileDraft.birthDate}
+                aria-label="Data de nascimento"
+                onChange={handleChange}
+              />
+
+              <Button type="submit">
+                {savingUser === "profile" ? "Salvando..." : "Salvar alterações"}
+              </Button>
+
+              <Button type="button" onClick={() => setProfileDraft(null)}>
+                Cancelar
+              </Button>
+            </fieldset>
+          </form>
+        )}
+
+        {/* ENDEREÇO */}
+
+        <section className={s.addressInfo}>
+          <div className={s.addressSectionHeader}>
+            <div>
+              <h1>Meus endereços</h1>
+
+              <p>Gerencie seus endereços cadastrados.</p>
+            </div>
+
+            {!isEditingAddress && (
+              <Button
+                type="button"
+                onClick={handleNewAddress}
+                disabled={loadingAddresses || addressBusy}
+              >
+                Adicionar endereço
+              </Button>
+            )}
+          </div>
+
+          {addressListError && (
+            <p className={s.formError} role="alert">{addressListError}</p>
+          )}
+          {addressError && (
+            <p className={s.formError} role="alert">
+              {addressError}
+            </p>
+          )}
+
+          {loadingAddresses ? (
+            <p role="status">Carregando endereços...</p>
+          ) : (
+            <>
+              {addresses.length === 0 &&
+                !isEditingAddress &&
+                !addressListError && (
+                  <div className={s.emptyAddresses}>
+                    <p>Nenhum endereço cadastrado.</p>
+                  </div>
+                )}
+
+              <div className={s.addressList}>
+                {addresses.map((address) => (
+                  <AddressCard
+                    key={address.id}
+                    address={address}
+                    disabled={addressBusy}
+                    onEdit={handleEditAddress}
+                    onDelete={handleDeleteAddress}
+                    onSetPrimary={handleSetPrimaryAddress}
+                  />
+                ))}
+              </div>
+            </>
+          )}
+
+          {isEditingAddress && (
+            <form
+              key={editingAddressId ?? "new"}
+              className={s.addressForm}
+              onSubmit={handleAddressSubmit}
+              noValidate
+            >
+              <h2>
+                {editingAddressId ? "Editar endereço" : "Novo endereço"}
+              </h2>
+
+              <fieldset
+                className={s.inputWrapper}
+                disabled={addressBusy}
+              >
                 <Input
                   type="text"
-                  id="name"
-                  placeholder="Nome completo"
-                  value={userData.name}
-                  onChange={handleChange}
+                  id="apelido"
+                  placeholder="Apelido (Casa, Trabalho...)"
+                  value={addressData.apelido ?? ""}
+                  onChange={handleAddressChange}
+                  maxLength={60}
+                />
+
+                <div className={s.cepSearch}>
+                  <Input
+                    type="text"
+                    id="cep"
+                    placeholder="CEP"
+                    value={addressData.cep}
+                    onChange={handleAddressChange}
+                    maxLength={9}
+                    pattern="[0-9]{5}-?[0-9]{3}"
+                    required
+                  />
+
+                  <Button
+                    type="button"
+                    onClick={handleSearchCep}
+                    disabled={addressBusy}
+                  >
+                    {searchingCep ? "Buscando..." : "Buscar"}
+                  </Button>
+                </div>
+
+                <Input
+                  type="text"
+                  id="logradouro"
+                  placeholder="Rua ou avenida"
+                  value={addressData.logradouro}
+                  onChange={handleAddressChange}
+                  maxLength={180}
+                  required
                 />
 
                 <Input
-                  type="email"
-                  id="email"
-                  placeholder="E-mail"
-                  value={userData.email}
-                  onChange={handleChange}
+                  type="text"
+                  id="numero"
+                  placeholder="Número"
+                  value={addressData.numero}
+                  onChange={handleAddressChange}
+                  maxLength={20}
+                  required
                 />
 
                 <Input
-                  type="tel"
-                  id="phone"
-                  placeholder="Telefone"
-                  value={userData.phone}
-                  onChange={handleChange}
+                  type="text"
+                  id="bairro"
+                  placeholder="Bairro"
+                  value={addressData.bairro}
+                  onChange={handleAddressChange}
+                  maxLength={100}
+                  required
                 />
 
                 <Input
-                  type="date"
-                  id="birthDate"
-                  value={userData.birthDate}
-                  onChange={handleChange}
+                  type="text"
+                  id="cidade"
+                  placeholder="Cidade"
+                  value={addressData.cidade}
+                  onChange={handleAddressChange}
+                  maxLength={100}
+                  required
                 />
 
-                <Button type="submit">Salvar alterações</Button>
+                <Input
+                  type="text"
+                  id="estado"
+                  placeholder="UF"
+                  maxLength={2}
+                  pattern="[A-Za-z]{2}"
+                  value={addressData.estado}
+                  onChange={handleAddressChange}
+                  required
+                />
 
-                <Button type="button" onClick={() => setIsEditing(false)}>
+                <Input
+                  type="text"
+                  id="complemento"
+                  placeholder="Complemento"
+                  value={addressData.complemento ?? ""}
+                  onChange={handleAddressChange}
+                  maxLength={150}
+                />
+              </fieldset>
+
+              <AddressMap
+                latitude={addressData.latitude ?? null}
+                longitude={addressData.longitude ?? null}
+                focus={mapFocus}
+                onLocationSelect={handleLocationSelect}
+                disabled={addressBusy}
+              />
+
+              <div className={s.addressFormActions}>
+                <Button type="submit" disabled={addressBusy}>
+                  {savingAddress ? "Salvando..." : "Salvar endereço"}
+                </Button>
+
+                <Button
+                  type="button"
+                  onClick={() => {
+                    if (!addressSaveLock.current && !cepRequest.current) resetAddressForm();
+                  }}
+                  disabled={addressBusy}
+                >
                   Cancelar
                 </Button>
               </div>
             </form>
           )}
-
-          {/* ENDEREÇO */}
-
-          <div className={s.adressInfo}>
-            <h1>Endereço</h1>
-
-            <section className={s.adressInfo}>
-              <div className={s.addressSectionHeader}>
-                <div>
-                  <h1>Meus endereços</h1>
-
-                  <p>Gerencie seus endereços cadastrados.</p>
-                </div>
-
-                {!isEditingAddress && (
-                  <Button
-                    type="button"
-                    onClick={handleNewAddress}
-                    disabled={loadingAddresses || savingAddress}
-                  >
-                    Adicionar endereço
-                  </Button>
-                )}
-              </div>
-
-              {addressError && (
-                <p className={s.addressError} role="alert">
-                  {addressError}
-                </p>
-              )}
-
-              {loadingAddresses ? (
-                <p>Carregando endereços...</p>
-              ) : (
-                <>
-                  {addresses.length === 0 &&
-                    !isEditingAddress &&
-                    !addressError && (
-                      <div className={s.emptyAddresses}>
-                        <p>Nenhum endereço cadastrado.</p>
-                      </div>
-                    )}
-
-                  <div className={s.addressList}>
-                    {addresses.map((address) => (
-                      <AddressCard
-                        key={address.id}
-                        address={address}
-                        onEdit={(item) => {
-                          if (!savingAddress) {
-                            handleEditAddress(item);
-                          }
-                        }}
-                        onDelete={handleDeleteAddress}
-                        onSetPrimary={handleSetPrimaryAddress}
-                      />
-                    ))}
-                  </div>
-                </>
-              )}
-
-              {isEditingAddress && (
-                <form className={s.addressForm} onSubmit={handleAddressSubmit}>
-                  <h2>
-                    {editingAddressId ? "Editar endereço" : "Novo endereço"}
-                  </h2>
-
-                  <fieldset
-                    className={s.inputWrapper}
-                    disabled={savingAddress || searchingCep}
-                  >
-                    <Input
-                      type="text"
-                      id="apelido"
-                      placeholder="Apelido (Casa, Trabalho...)"
-                      value={addressData.apelido ?? ""}
-                      onChange={handleAddressChange}
-                      maxLength={60}
-                    />
-
-                    <div className={s.cepSearch}>
-                      <Input
-                        type="text"
-                        id="cep"
-                        placeholder="CEP"
-                        value={addressData.cep}
-                        onChange={handleAddressChange}
-                        maxLength={9}
-                        pattern="[0-9]{5}-?[0-9]{3}"
-                        disabled={searchingCep}
-                        required
-                      />
-
-                      <Button
-                        type="button"
-                        onClick={handleSearchCep}
-                        disabled={searchingCep || savingAddress}
-                      >
-                        {searchingCep ? "Buscando..." : "Buscar"}
-                      </Button>
-                    </div>
-
-                    <Input
-                      type="text"
-                      id="logradouro"
-                      placeholder="Rua ou avenida"
-                      value={addressData.logradouro}
-                      onChange={handleAddressChange}
-                      maxLength={180}
-                      required
-                    />
-
-                    <Input
-                      type="text"
-                      id="numero"
-                      placeholder="Número"
-                      value={addressData.numero}
-                      onChange={handleAddressChange}
-                      maxLength={20}
-                      required
-                    />
-
-                    <Input
-                      type="text"
-                      id="bairro"
-                      placeholder="Bairro"
-                      value={addressData.bairro}
-                      onChange={handleAddressChange}
-                      maxLength={100}
-                      required
-                    />
-
-                    <Input
-                      type="text"
-                      id="cidade"
-                      placeholder="Cidade"
-                      value={addressData.cidade}
-                      onChange={handleAddressChange}
-                      maxLength={100}
-                      required
-                    />
-
-                    <Input
-                      type="text"
-                      id="estado"
-                      placeholder="UF"
-                      maxLength={2}
-                      pattern="[A-Za-z]{2}"
-                      value={addressData.estado}
-                      onChange={handleAddressChange}
-                      required
-                    />
-
-                    <Input
-                      type="text"
-                      id="complemento"
-                      placeholder="Complemento"
-                      value={addressData.complemento ?? ""}
-                      onChange={handleAddressChange}
-                      maxLength={150}
-                    />
-                  </fieldset>
-
-                  <AddressMap
-                    latitude={addressData.latitude ?? null}
-                    longitude={addressData.longitude ?? null}
-                    focus={mapFocus}
-                    onLocationSelect={handleLocationSelect}
-                    disabled={savingAddress || searchingCep}
-                  />
-
-                  {locationMessage && (
-                    <p className={s.locationMessage} role="status">
-                      {locationMessage}
-                    </p>
-                  )}
-
-                  <div className={s.addressFormActions}>
-                    <Button type="submit" disabled={savingAddress}>
-                      {savingAddress ? "Salvando..." : "Salvar endereço"}
-                    </Button>
-
-                    <Button
-                      type="button"
-                      onClick={handleCancelAddress}
-                      disabled={savingAddress}
-                    >
-                      Cancelar
-                    </Button>
-                  </div>
-                </form>
-              )}
-            </section>
-          </div>
-
-          <Button type="button">Editar endereço</Button>
-        </div>
-
+        </section>
         {/* CONVÊNIO */}
 
-        <div className={s.agreementInfo}>
+        <section className={s.agreementInfo}>
           <div className={s.texts}>
             <h1>Convênio</h1>
 
@@ -656,7 +727,12 @@ async function handleSearchCep() {
             </p>
           </div>
 
-          {!isEditingConvenio ? (
+          {convenioLoadError && <p className={s.formError} role="alert">{convenioLoadError}</p>}
+          {convenioError && <p className={s.formError} role="alert">{convenioError}</p>}
+          {(loadingProfile || loadingConvenios) && <p role="status">Carregando dados do convênio...</p>}
+          {profileLoadError && <p>O vínculo com seu convênio está indisponível.</p>}
+
+          {userData && (!isEditingConvenio ? (
             <>
               {userData.convenio ? (
                 <div className={s.texts}>
@@ -666,7 +742,7 @@ async function handleSearchCep() {
 
                   <p>Hospitais credenciados:</p>
 
-                  {userData.convenio.hospitaisAceitos.map((hospital) => (
+                  {userData.convenio.hospitaisAceitos?.map((hospital) => (
                     <p key={hospital}>{hospital}</p>
                   ))}
                 </div>
@@ -674,9 +750,20 @@ async function handleSearchCep() {
                 <p>Nenhum convênio vinculado.</p>
               )}
 
-              <Button type="button" onClick={() => setIsEditingConvenio(true)}>
-                Editar convênio
-              </Button>
+              {!loadingConvenios && !convenioLoadError && (
+                convenios.length > 0 ? (
+                  <Button
+                    type="button"
+                    disabled={savingUser !== null}
+                    onClick={() => {
+                      resetConvenioSelection();
+                      setIsEditingConvenio(true);
+                    }}
+                  >
+                    Editar convênio
+                  </Button>
+                ) : <p>Nenhum convênio disponível para seleção.</p>
+              )}
             </>
           ) : (
             <div className={s.editAgreement}>
@@ -685,6 +772,7 @@ async function handleSearchCep() {
               <select
                 id="convenio"
                 value={selectedConvenio}
+                disabled={savingUser !== null}
                 onChange={(event) => setSelectedConvenio(event.target.value)}
               >
                 <option value="">Selecione</option>
@@ -696,17 +784,24 @@ async function handleSearchCep() {
                 ))}
               </select>
 
-              <Button type="button" onClick={handleUpdateConvenio}>
-                Salvar convênio
+              <Button type="button" onClick={handleUpdateConvenio} disabled={!selectedConvenio || savingUser !== null}>
+                {savingUser === "convenio" ? "Salvando..." : "Salvar convênio"}
               </Button>
 
-              <Button type="button" onClick={() => setIsEditingConvenio(false)}>
+              <Button
+                type="button"
+                disabled={savingUser === "convenio"}
+                onClick={() => {
+                  resetConvenioSelection();
+                  setIsEditingConvenio(false);
+                }}
+              >
                 Cancelar
               </Button>
             </div>
-          )}
-        </div>
-      </div>
-    </>
+          ))}
+        </section>
+      </main>
+    </div>
   );
 }

@@ -7,7 +7,7 @@ import {
   TileLayer,
   Marker,
   useMapEvents,
-  useMap
+  useMap,
 } from "react-leaflet";
 import type { Coordinates } from "../../service/geocodingService";
 
@@ -53,7 +53,7 @@ function LocationSelector({
     click(event) {
       if (disabled) return;
 
-      const { lat, lng } = event.latlng;
+      const { lat, lng } = event.latlng.wrap();
 
       onLocationSelect(lat, lng);
     },
@@ -105,7 +105,7 @@ export function AddressMap({
         scrollWheelZoom={false}
         className={s.map}
       >
-        <MapFocus focus={focus}/>
+        <MapFocus focus={focus} />
         <TileLayer
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
           url="https://tile.openstreetmap.org/{z}/{x}/{y}.png"

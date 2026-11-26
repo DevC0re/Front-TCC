@@ -96,6 +96,11 @@
     cursor: pointer;
 
     transition: background 0.2s ease;
+
+    &:disabled {
+      opacity: 0.55;
+      cursor: not-allowed;
+    }
   }
 }
 

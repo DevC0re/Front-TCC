@@ -41,11 +41,16 @@ export function Navbar() {
           <span>Home</span>
         </NavLink>
 
-        <button type="button" className={s.navItem} aria-label="Perfil"
-          onClick={() => setIsModalOpen(true)}>
+        <NavLink
+          to="/profile"
+          aria-label="Perfil"
+          className={({ isActive }) =>
+            `${s.navItem} ${isActive ? s.active : ""}`
+          }
+        >
           <UserRound />
           <span>Perfil</span>
-        </button>
+        </NavLink>
 
         <button type="button" className={s.navItem} aria-label="Favoritos"
           onClick={() => setIsModalOpen(true)}>

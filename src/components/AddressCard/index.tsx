@@ -1,17 +1,10 @@
 import s from "./AddressCard.module.scss";
 import { MapPin, Pencil, Trash2, Star } from "lucide-react";
-import type { AddressResponse } from "../../service/adressService";
-
-
-interface AddressCardProps {
-  address: AddressResponse;
-  onEdit: (address: AddressResponse) => void;
-  onDelete: (id: string) => void;
-  onSetPrimary: (id: string) => void;
-}
+import type { AddressResponse } from "../../service/addressService";
 
 interface AddressCardProps {
   address: AddressResponse;
+  disabled: boolean;
   onEdit: (address: AddressResponse) => void;
   onDelete: (id: string) => void;
   onSetPrimary: (id: string) => void;
@@ -19,6 +12,7 @@ interface AddressCardProps {
 
 export function AddressCard({
   address,
+  disabled,
   onEdit,
   onDelete,
   onSetPrimary,
@@ -63,6 +57,7 @@ export function AddressCard({
           <button
             type="button"
             className={s.primaryButton}
+            disabled={disabled}
             onClick={() => onSetPrimary(address.id)}
           >
             <Star size={16} />
@@ -73,6 +68,7 @@ export function AddressCard({
         <button
           type="button"
           className={s.editButton}
+          disabled={disabled}
           onClick={() => onEdit(address)}
         >
           <Pencil size={16} />
@@ -82,6 +78,7 @@ export function AddressCard({
         <button
           type="button"
           className={s.deleteButton}
+          disabled={disabled}
           onClick={() => onDelete(address.id)}
         >
           <Trash2 size={16} />
