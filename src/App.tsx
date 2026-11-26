@@ -1,3 +1,4 @@
+import { UserProfilePage } from "./pages/UserProfilePage";
 import { HomePage } from "./pages/HomePage"
 import { LoginPage } from "./pages/LoginPage"
 import { ProtectRoute } from "./components/ProtectedRoute"
@@ -16,6 +17,7 @@ function App() {
     <Route path="/" element={<LoginPage/>}/>
 <Route element={<ProtectRoute />}>
   <Route path="/home" element={<HomePage />} />
+  <Route path="/profile" element={<UserProfilePage />} />
 
   <Route
     path="/hospital/:id"
