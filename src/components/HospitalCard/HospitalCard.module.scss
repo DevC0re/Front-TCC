@@ -528,3 +528,149 @@
     outline-offset: 3px;
   }
 }
+
+
+\*   CARD DE CONVÊNIO
+*/
+
+.convenioCard {
+  width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+
+  display: flex;
+  align-items: center;
+  gap: 24px;
+
+  padding: 24px;
+  min-height: 170px;
+
+  background-color: $white;
+  border-radius: 12px;
+}
+
+.convenioImage {
+  width: 100px;
+  height: 100px;
+
+  object-fit: cover;
+  border-radius: 10px;
+  flex-shrink: 0;
+}
+
+.convenioContent {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-width: 0;
+  gap: 16px;
+
+  h2 {
+    margin: 0;
+    font-size: 22px;
+    font-weight: 600;
+    color: #1a1a1a;
+  }
+}
+
+.convenioTitle {
+  border: none;
+  background: transparent;
+  padding: 0;
+  font: inherit;
+  color: inherit;
+  text-align: left;
+  cursor: pointer;
+
+  &:hover {
+    text-decoration: underline;
+  }
+}
+
+.convenioActions {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 24px;
+
+  .rating,
+  .status {
+    width: 126px;
+    height: 57px;
+  }
+
+  button:not(.convenioTitle) {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+
+    min-width: 136px;
+    height: 58px;
+    padding: 10px 20px;
+
+    border: 1px solid #1a1a1a;
+    border-radius: 100px;
+
+    background-color: $navy;
+    color: $white;
+
+    font-size: 18px;
+    font-weight: 700;
+    cursor: pointer;
+
+    box-shadow: 3px 3px 8px rgba(0, 0, 0, 0.2);
+
+    transition: opacity 0.2s ease;
+
+    &:hover:not(:disabled) {
+      opacity: 0.85;
+    }
+
+    &:disabled {
+      background-color: #aab4bf;
+      cursor: not-allowed;
+    }
+  }
+}
+
+.closed {
+  background-color: #fee2e2;
+
+  p {
+    color: #991b1b;
+  }
+}
+
+@media (max-width: 768px) {
+  .convenioCard {
+    align-items: flex-start;
+    padding: 16px;
+    gap: 16px;
+  }
+
+  .convenioImage {
+    width: 80px;
+    height: 80px;
+  }
+
+  .convenioContent h2 {
+    font-size: 18px;
+  }
+
+  .convenioActions {
+    gap: 10px;
+
+    button:not(.convenioTitle) {
+      min-width: 100px;
+      height: 42px;
+      font-size: 14px;
+    }
+
+    .rating,
+    .status {
+      width: 100px;
+      height: 42px;
+    }
+  }
+}
