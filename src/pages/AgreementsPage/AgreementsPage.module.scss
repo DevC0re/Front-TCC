@@ -1,0 +1,153 @@
+@use "../../style/utils/variables" as *;
+
+.body {
+  min-height: 100vh;
+  background-color: $sky-blue;
+}
+
+.main {
+  width: 100%;
+  max-width: 1600px;
+  box-sizing: border-box;
+
+  margin: 0 auto;
+  padding: 40px;
+
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+}
+
+.convenioInfo {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+
+  background-color: $white;
+  border-radius: 20px;
+  padding: 24px;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+
+  h1 {
+    margin: 0;
+    font-size: 24px;
+    font-weight: 800;
+    color: $black;
+  }
+
+  button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border: none;
+    background: transparent;
+    cursor: pointer;
+    color: $black;
+  }
+}
+
+.convenioLogo {
+  min-height: 160px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border: 1px solid #b6b6b6;
+  border-radius: 15px;
+
+  h2 {
+    font-size: 42px;
+    font-weight: 700;
+    color: $navy;
+    text-align: center;
+  }
+}
+
+.hospitalsSection {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.sectionHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+
+  h2 {
+    margin: 0 0 4px;
+    font-size: 26px;
+    font-weight: 700;
+    color: #1a1a1a;
+  }
+
+  p {
+    color: $neutral-500;
+    font-size: 14px;
+  }
+}
+
+.hospitalCount {
+  padding: 10px 16px;
+
+  background-color: #e8f2fa;
+  border-radius: 12px;
+
+  font-size: 13px;
+  font-weight: 600;
+  color: $navy;
+
+  white-space: nowrap;
+}
+
+.hospitalList {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.notice {
+  font-size: 13px;
+  color: $neutral-600;
+}
+
+.emptyHospitals {
+  padding: 40px 20px;
+
+  background-color: $white;
+  border-radius: 12px;
+
+  text-align: center;
+  color: $neutral-500;
+}
+
+@media (max-width: 768px) {
+  .main {
+    padding: 20px;
+  }
+
+  .header h1 {
+    font-size: 20px;
+  }
+
+  .sectionHeader h2 {
+    font-size: 22px;
+  }
+
+  .convenioLogo {
+    min-height: 120px;
+
+    h2 {
+      font-size: 32px;
+    }
+  }
+}
